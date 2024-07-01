@@ -12,7 +12,7 @@ export const languages = {
     accept: "Accept",
     abortResponse: "Stop",
     language: "English",
-    placeholder: "Your message",
+    placeholder: "Your message test",
     refresh: "Another answer",
     reset: "New chat",
     send: "Send",

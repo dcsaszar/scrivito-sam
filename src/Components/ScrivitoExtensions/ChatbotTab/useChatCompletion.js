@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import MistralClient from "@mistralai/mistralai";
 import { useMemo, useState } from "react";
 
 export function useChatCompletion({ apiKey, instanceId, model, user }) {
@@ -50,6 +51,14 @@ let OPENAI_API_KEY =
     : // @ts-ignore
       import.meta.env.OPENAI_API_KEY;
 
+let MISTRAL_API_KEY =
+  // @ts-ignore
+  typeof import.meta.env === "undefined"
+    ? // @ts-ignore
+      process.env.MISTRAL_API_KEY
+    : // @ts-ignore
+      import.meta.env.MISTRAL_API_KEY;
+
 async function startStreaming({
   apiKey,
   instanceId,
@@ -60,6 +69,61 @@ async function startStreaming({
   setMessages,
   user,
 }) {
+
+  switch (model) {
+    case "openai":
+      await openaiStreaming({
+        apiKey,
+        instanceId,
+        messages,
+        model,
+        setCompletionMessage,
+        setLoading,
+        setMessages,
+        user,
+      });
+      break;
+    case "mistral":
+      throw Error("Unknown service.");
+    default:
+      await mistralStreaming({
+        apiKey,
+        instanceId,
+        messages,
+        model,
+        setCompletionMessage,
+        setLoading,
+        setMessages,
+        user,
+      });
+  }
+
+}
+
+function cleanHeaders(headers = {}) {
+  return Object.fromEntries(
+    Object.entries(headers)
+      .filter(([k]) => !k.startsWith("x-"))
+      .map(([k, v]) => [
+        k
+          .replace("content-type", "Content-Type")
+          .replace("authorization", "Authorization")
+          .replace("accept", "Accept"),
+        v,
+      ])
+  );
+}
+
+async function openaiStreaming({
+                                 apiKey,
+                                 instanceId,
+                                 messages,
+                                 model,
+                                 setCompletionMessage,
+                                 setLoading,
+                                 setMessages,
+                                 user,
+                               }) {
   const client = new OpenAI({
     apiKey: OPENAI_API_KEY || apiKey,
     baseURL: OPENAI_API_KEY
@@ -96,16 +160,34 @@ async function startStreaming({
   });
 }
 
-function cleanHeaders(headers = {}) {
-  return Object.fromEntries(
-    Object.entries(headers)
-      .filter(([k]) => !k.startsWith("x-"))
-      .map(([k, v]) => [
-        k
-          .replace("content-type", "Content-Type")
-          .replace("authorization", "Authorization")
-          .replace("accept", "Accept"),
-        v,
-      ])
-  );
+async function mistralStreaming({
+                                 apiKey,
+                                 instanceId,
+                                 messages,
+                                 model,
+                                 setCompletionMessage,
+                                 setLoading,
+                                 setMessages,
+                                 user,
+                               }) {
+  apiKey = MISTRAL_API_KEY || apiKey;
+  let endpoint = MISTRAL_API_KEY
+    ? "/chat/completions"
+    : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+  const client = new MistralClient(apiKey, endpoint);
+
+  const stream = await client.chatStream({
+    model,
+    messages,
+  });
+
+  console.log('Chat Stream:');
+  for await (const chunk of stream) {
+    if (chunk.choices[0].delta.content !== undefined) {
+      const streamText = chunk.choices[0].delta.content;
+      process.stdout.write(streamText);
+    }
+  }
+
+  return null;
 }

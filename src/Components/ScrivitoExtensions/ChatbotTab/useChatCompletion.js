@@ -178,7 +178,7 @@ async function mistralStreaming({
     let fullMessage = '';
     for await (const chunk of response) {
       const message = chunk.choices[0]?.delta?.content;
-      console.log(chunk.choices[0]?.delta);
+      console.log(chunk.choices[0]);
       if (message) {
         fullMessage += message;
         setCompletionMessage({ role: 'assistant', content: fullMessage });

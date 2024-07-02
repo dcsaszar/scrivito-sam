@@ -176,16 +176,24 @@ async function mistralStreaming({
 
   console.log('Chat Stream:');
   let fullMessage = '';
+
+  // Simulate stream.on("content", ...) behavior
   for await (const chunk of response) {
     const message = chunk.choices[0]?.delta?.content;
     if (message) {
       fullMessage += message;
-      setCompletionMessage(fullMessage);
+      setCompletionMessage(fullMessage); // Update completion message as stream progresses
     }
   }
 
+  // Simulate stream.finalChatCompletion() behavior
+  const finalChoices = await new Promise((resolve) => {
+    response.on('end', () => {
+      resolve([{ message: { role: 'assistant', content: fullMessage } }]);
+    });
+  });
+
   setCompletionMessage(null);
-  setMessages(messages.concat([{role: 'assistant', content: fullMessage }]));
-  console.log(messages);
+  setMessages(messages.concat(finalChoices[0].message)); // Ensure the format is consistent
   setLoading(false);
 }

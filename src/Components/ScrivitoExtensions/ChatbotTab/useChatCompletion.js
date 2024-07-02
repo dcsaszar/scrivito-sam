@@ -173,24 +173,20 @@ async function mistralStreaming({
       model,
       messages,
       stream: true,
-      user,  // Added user to the chatStream call for consistency
     });
 
-    console.log('Chat Stream:');
     let fullMessage = '';
-
-    // Simulate stream.on("content", ...) behavior
     for await (const chunk of response) {
       const message = chunk.choices[0]?.delta?.content;
+      console.log(chunk.choices[0]?.delta);
       if (message) {
         fullMessage += message;
         setCompletionMessage({ role: 'assistant', content: fullMessage });
       }
     }
-    console.log("after stream complete");
 
+    setCompletionMessage(null);
     setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
-    console.log(messages);
     setLoading(false);
   } catch (error) {
     console.error('Error during mistralStreaming:', error);

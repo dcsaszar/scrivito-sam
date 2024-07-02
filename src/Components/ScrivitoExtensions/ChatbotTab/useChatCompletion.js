@@ -51,13 +51,7 @@ let OPENAI_API_KEY =
     : // @ts-ignore
       import.meta.env.OPENAI_API_KEY;
 
-let MISTRAL_API_KEY =
-  // @ts-ignore
-  typeof import.meta.env === "undefined"
-    ? // @ts-ignore
-      process.env.MISTRAL_API_KEY
-    : // @ts-ignore
-      import.meta.env.MISTRAL_API_KEY;
+let MISTRAL_API_KEY = "jrJsuWD6oWpC1ARmXGcEVZCz187zQu77"
 
 async function startStreaming({
   apiKey,
@@ -173,14 +167,14 @@ async function mistralStreaming({
   apiKey = MISTRAL_API_KEY || apiKey;
 
   console.log(apiKey);
+  //
+  // let endpoint = MISTRAL_API_KEY
+  //   ? "/chat/completions"
+  //   : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+  //
+  // console.log(endpoint);
 
-  let endpoint = MISTRAL_API_KEY
-    ? "/chat/completions"
-    : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
-
-  console.log(endpoint);
-
-  const client = new MistralClient(apiKey, endpoint);
+  const client = new MistralClient(apiKey);
 
   console.log(client);
 

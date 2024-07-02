@@ -155,47 +155,46 @@ async function openaiStreaming({
 }
 
 async function mistralStreaming({
-                                 apiKey,
-                                 instanceId,
-                                 messages,
-                                 model,
-                                 setCompletionMessage,
-                                 setLoading,
-                                 setMessages,
-                                 user,
-                               }) {
+                                  apiKey,
+                                  instanceId,
+                                  messages,
+                                  model,
+                                  setCompletionMessage,
+                                  setLoading,
+                                  setMessages,
+                                  user,
+                                }) {
   apiKey = MISTRAL_API_KEY || apiKey;
 
   const client = new MistralClient(apiKey);
 
-  const response = await client.chatStream({
-    model,
-    messages,
-    stream: true,
-  });
-
-  console.log('Chat Stream:');
-  let fullMessage = '';
-
-  // Simulate stream.on("content", ...) behavior
-  for await (const chunk of response) {
-    const message = chunk.choices[0]?.delta?.content;
-    if (message) {
-      console.log(message);
-      fullMessage += message;
-      console.log(fullMessage);
-      setCompletionMessage(fullMessage); // Update completion message as stream progresses
-    }
-  }
-
-  // Simulate stream.finalChatCompletion() behavior
-  const finalChoices = await new Promise((resolve) => {
-    response.on('end', () => {
-      resolve([{ message: { role: 'assistant', content: fullMessage } }]);
+  try {
+    const response = await client.chatStream({
+      model,
+      messages,
+      stream: true,
+      user,  // Added user to the chatStream call for consistency
     });
-  });
 
-  setCompletionMessage(null);
-  setMessages(messages.concat(finalChoices[0].message)); // Ensure the format is consistent
-  setLoading(false);
+    console.log('Chat Stream:');
+    let fullMessage = '';
+
+    // Simulate stream.on("content", ...) behavior
+    for await (const chunk of response) {
+      const message = chunk.choices[0]?.delta?.content;
+      if (message) {
+        fullMessage += message;
+        // Instead of setting the completion message here, we'll aggregate the message parts first
+      }
+    }
+
+    // Once the stream is complete, update the completion message and set the final message
+    setCompletionMessage(fullMessage);
+    setMessages(messages.concat({ role: 'assistant', content: fullMessage })); // Ensure the format is consistent
+    setLoading(false);
+  } catch (error) {
+    console.error('Error during mistralStreaming:', error);
+    setLoading(false);
+  }
 }
+

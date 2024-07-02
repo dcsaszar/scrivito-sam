@@ -166,25 +166,13 @@ async function mistralStreaming({
                                }) {
   apiKey = MISTRAL_API_KEY || apiKey;
 
-  console.log(apiKey);
-  //
-  // let endpoint = MISTRAL_API_KEY
-  //   ? "/chat/completions"
-  //   : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
-  //
-  // console.log(endpoint);
-
   const client = new MistralClient(apiKey);
-
-  console.log(client);
 
   const response = await client.chatStream({
     model,
     messages,
     stream: true,
   });
-
-  console.log(response);
 
   console.log('Chat Stream:');
   let fullMessage = '';
@@ -195,6 +183,8 @@ async function mistralStreaming({
       setCompletionMessage(fullMessage);
     }
   }
+
+  console.log(fullMessage);
 
   setCompletionMessage(null);
   setMessages(messages.concat({ role: 'assistant', content: fullMessage }));

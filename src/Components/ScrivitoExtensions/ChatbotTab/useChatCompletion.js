@@ -184,13 +184,8 @@ async function mistralStreaming({
     }
   }
 
-  console.log(await response);
-  console.log(response.message);
-
-  //console.log(response);
-
   setCompletionMessage(null);
-  setMessages(messages.concat(response.choices[0].message));
+  setMessages(messages.concat([{role: 'assistant', content: fullMessage }]));
   console.log(messages);
   setLoading(false);
 }

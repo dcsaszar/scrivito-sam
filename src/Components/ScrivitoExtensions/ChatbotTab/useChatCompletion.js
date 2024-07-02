@@ -189,7 +189,7 @@ async function mistralStreaming({
   for await (const chunk of stream) {
     if (chunk.choices[0].delta.content !== undefined) {
       const streamText = chunk.choices[0].delta.content;
-      process.stdout.write(streamText);
+      console.log(streamText);
     }
   }
 

@@ -184,8 +184,8 @@ async function mistralStreaming({
     }
   }
 
-  console.log(response);
-  console.log(fullMessage);
+  console.log(await response);
+  console.log(response.message);
 
   //console.log(response);
 

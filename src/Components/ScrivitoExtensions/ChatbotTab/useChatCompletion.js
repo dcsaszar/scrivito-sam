@@ -187,12 +187,17 @@ async function mistralStreaming({
   console.log(response);
 
   console.log('Chat Stream:');
+  let fullMessage = '';
   for await (const chunk of response) {
     const message = chunk.choices[0]?.delta?.content;
-    if (message) setCompletionMessage(message);
+    if (message) {
+      fullMessage += message;
+      setCompletionMessage(fullMessage);
+    }
   }
 
   setCompletionMessage(null);
-  setMessages(messages.concat(response.choices[0].message));
+  setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
+  console.log(messages);
   setLoading(false);
 }

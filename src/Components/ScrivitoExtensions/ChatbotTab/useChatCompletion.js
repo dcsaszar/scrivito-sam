@@ -184,13 +184,13 @@ async function mistralStreaming({
       const message = chunk.choices[0]?.delta?.content;
       if (message) {
         fullMessage += message;
-        // Instead of setting the completion message here, we'll aggregate the message parts first
+        setCompletionMessage({ role: 'assistant', content: fullMessage });
       }
     }
+    console.log("after stream complete");
 
-    // Once the stream is complete, update the completion message and set the final message
-    setCompletionMessage(fullMessage);
-    setMessages(messages.concat({ role: 'assistant', content: fullMessage })); // Ensure the format is consistent
+    setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
+    console.log(messages);
     setLoading(false);
   } catch (error) {
     console.error('Error during mistralStreaming:', error);

@@ -91,21 +91,6 @@ async function startStreaming({
         user,
       });
   }
-
-}
-
-function cleanHeaders(headers = {}) {
-  return Object.fromEntries(
-    Object.entries(headers)
-      .filter(([k]) => !k.startsWith("x-"))
-      .map(([k, v]) => [
-        k
-          .replace("content-type", "Content-Type")
-          .replace("authorization", "Authorization")
-          .replace("accept", "Accept"),
-        v,
-      ])
-  );
 }
 
 async function openaiStreaming({
@@ -156,41 +141,46 @@ async function openaiStreaming({
 
 async function mistralStreaming({
                                   apiKey,
-                                  instanceId,
                                   messages,
                                   model,
                                   setCompletionMessage,
                                   setLoading,
                                   setMessages,
-                                  user,
                                 }) {
   apiKey = MISTRAL_API_KEY || apiKey;
 
   const client = new MistralClient(apiKey);
 
-  try {
-    const response = await client.chatStream({
-      model,
-      messages,
-      stream: true,
-    });
+  const response = await client.chatStream({
+    model,
+    messages,
+    stream: true,
+  });
 
-    let fullMessage = '';
-    for await (const chunk of response) {
-      const message = chunk.choices[0]?.delta?.content;
-      console.log(chunk.choices[0]);
-      if (message) {
-        fullMessage += message;
-        setCompletionMessage({ role: 'assistant', content: fullMessage });
-      }
+  let fullMessage = '';
+  for await (const chunk of response) {
+    const message = chunk.choices[0]?.delta?.content;
+    if (message) {
+      fullMessage += message;
+      setCompletionMessage({ role: 'assistant', content: fullMessage });
     }
-
-    setCompletionMessage(null);
-    setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
-    setLoading(false);
-  } catch (error) {
-    console.error('Error during mistralStreaming:', error);
-    setLoading(false);
   }
+
+  setCompletionMessage(null);
+  setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
+  setLoading(false);
 }
 
+function cleanHeaders(headers = {}) {
+  return Object.fromEntries(
+    Object.entries(headers)
+      .filter(([k]) => !k.startsWith("x-"))
+      .map(([k, v]) => [
+        k
+          .replace("content-type", "Content-Type")
+          .replace("authorization", "Authorization")
+          .replace("accept", "Accept"),
+        v,
+      ])
+  );
+}

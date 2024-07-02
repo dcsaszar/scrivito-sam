@@ -178,20 +178,21 @@ async function mistralStreaming({
 
   console.log(client);
 
-  const stream = await client.chatStream({
+  const response = await client.chatStream({
     model,
     messages,
+    stream: true,
   });
 
-  console.log(stream);
+  console.log(response);
 
   console.log('Chat Stream:');
-  for await (const chunk of stream) {
-    if (chunk.choices[0].delta.content !== undefined) {
-      const streamText = chunk.choices[0].delta.content;
-      console.log(streamText);
-    }
+  for await (const chunk of response) {
+    const message = chunk.choices[0]?.delta?.content;
+    if (message) setCompletionMessage(message);
   }
 
-  return null;
+  setCompletionMessage(null);
+  setMessages(messages.concat(response.choices[0].message));
+  setLoading(false);
 }

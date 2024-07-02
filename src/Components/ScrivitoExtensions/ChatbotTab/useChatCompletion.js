@@ -34,10 +34,7 @@ export function useChatCompletion({ apiKey, instanceId, model, user }) {
         return messagesWithPrompt;
       });
     },
-    abortResponse: () => {
-      console.log(MISTRAL_API_KEY);
-      console.log(OPENAI_API_KEY);
-    },
+    abortResponse: () => {},
     resetMessages: () => {
       setCompletionMessage(null);
       setMessages([]);
@@ -174,15 +171,25 @@ async function mistralStreaming({
                                  user,
                                }) {
   apiKey = MISTRAL_API_KEY || apiKey;
+
+  console.log(apiKey);
+
   let endpoint = MISTRAL_API_KEY
     ? "/chat/completions"
     : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+
+  console.log(endpoint);
+
   const client = new MistralClient(apiKey, endpoint);
+
+  console.log(client);
 
   const stream = await client.chatStream({
     model,
     messages,
   });
+
+  console.log(stream);
 
   console.log('Chat Stream:');
   for await (const chunk of stream) {

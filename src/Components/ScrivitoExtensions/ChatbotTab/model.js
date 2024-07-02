@@ -1,5 +1,5 @@
 export function getModel() {
-  const fallback = "gpt-4o";
+  const fallback = "codestral-latest";
   try {
     return localStorage.getItem("openai_model") || fallback;
   } catch {

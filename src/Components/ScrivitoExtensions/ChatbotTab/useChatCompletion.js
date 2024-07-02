@@ -34,7 +34,10 @@ export function useChatCompletion({ apiKey, instanceId, model, user }) {
         return messagesWithPrompt;
       });
     },
-    abortResponse: () => {},
+    abortResponse: () => {
+      console.log(MISTRAL_API_KEY);
+      console.log(OPENAI_API_KEY);
+    },
     resetMessages: () => {
       setCompletionMessage(null);
       setMessages([]);

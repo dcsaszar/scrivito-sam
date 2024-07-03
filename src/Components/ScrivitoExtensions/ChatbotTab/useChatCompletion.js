@@ -66,14 +66,6 @@ let MODEL =
     : // @ts-ignore
     import.meta.env.MODEL;
 
-let MODEL_AI =
-  // @ts-ignore
-  typeof import.meta.env === "undefined"
-    ? // @ts-ignore
-    process.env.MODEL_AI
-    : // @ts-ignore
-    import.meta.env.MODEL_AI;
-
 async function startStreaming({
   apiKey,
   instanceId,
@@ -114,18 +106,23 @@ async function openaiStreaming({
     case "mistral" :
       model = "codestral-latest";
       apiKey = MISTRAL_API_KEY ? MISTRAL_API_KEY : apiKey;
-      baseURL = MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+      baseURL = MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : baseURL;
       defaultQuery = null;
-      defaultHeaders = { Accept: "text/event-stream" };
+      defaultHeaders = { Accept: "*/*" };
       break;
     case "openai" :
       model = "gpt-4o"
       apiKey = OPENAI_API_KEY ? OPENAI_API_KEY : apiKey;
-      baseURL = OPENAI_API_KEY ? "https://api.openai.com/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+      baseURL = OPENAI_API_KEY ? "https://api.openai.com/v1" : baseURL;
       defaultQuery = { tenant_id: instanceId }
       defaultHeaders = { Accept: "*/*" };
       break;
     default :
+      model = "gpt-4o"
+      apiKey = OPENAI_API_KEY ? OPENAI_API_KEY : apiKey;
+      baseURL = OPENAI_API_KEY ? "https://api.openai.com/v1" : baseURL;
+      defaultQuery = { tenant_id: instanceId }
+      defaultHeaders = { Accept: "*/*" };
   }
   const client = new OpenAI({
     apiKey: apiKey,

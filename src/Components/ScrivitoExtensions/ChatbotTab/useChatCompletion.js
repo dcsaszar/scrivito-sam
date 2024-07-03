@@ -50,7 +50,13 @@ let OPENAI_API_KEY =
     : // @ts-ignore
       import.meta.env.OPENAI_API_KEY;
 
-let AI_API_KEY = "jrJsuWD6oWpC1ARmXGcEVZCz187zQu77";
+let MISTRAL_API_KEY =
+  // @ts-ignore
+  typeof import.meta.env === "undefined"
+    ? // @ts-ignore
+    process.env.MISTRAL_API_KEY
+    : // @ts-ignore
+    import.meta.env.MISTRAL_API_KEY;
 
 async function startStreaming({
   apiKey,
@@ -85,18 +91,18 @@ async function openaiStreaming({
                                  user,
                                }) {
   const client = new OpenAI({
-    apiKey: AI_API_KEY || OPENAI_API_KEY || apiKey,
-    baseURL: AI_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=",
+    apiKey: MISTRAL_API_KEY || OPENAI_API_KEY || apiKey,
+    baseURL: MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=",
 
     //defaultQuery: { tenant_id: instanceId },
     defaultHeaders: { Accept: "text/event-stream" },
     dangerouslyAllowBrowser: true,
-    // fetch: async (url, init) => {
-    //   return fetch(url, {
-    //     ...init,
-    //     headers: cleanHeaders(init?.headers),
-    //   });
-    // },
+    fetch: async (url, init) => {
+      return fetch(url, {
+        ...init,
+        headers: cleanHeaders(init?.headers),
+      });
+    },
   });
 
   const stream = await client.beta.chat.completions.stream({

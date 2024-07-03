@@ -124,7 +124,7 @@ async function openaiStreaming({
     apiKey: apiKey,
     baseURL: baseURL,
 
-    defaultQuery: defaultQuery,
+    defaultQuery: { tenant_id: instanceId },
     defaultHeaders: { Accept: "*/*" },
     dangerouslyAllowBrowser: true,
     fetch: async (url, init) => {
@@ -139,8 +139,7 @@ async function openaiStreaming({
     model,
     messages,
     stream: true,
-    user,
-  });
+  }); // we cannot have the user parameter with mistral otherwise it cannot read the body
 
   let fullMessage = '';
   for await (const chunk of response) {

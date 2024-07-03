@@ -90,7 +90,7 @@ async function openaiStreaming({
 
     //defaultQuery: { tenant_id: instanceId },
     defaultHeaders: { Accept: "text/event-stream" },
-    // dangerouslyAllowBrowser: true,
+    dangerouslyAllowBrowser: true,
     // fetch: async (url, init) => {
     //   return fetch(url, {
     //     ...init,

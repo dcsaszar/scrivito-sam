@@ -90,13 +90,13 @@ async function openaiStreaming({
 
     //defaultQuery: { tenant_id: instanceId },
     defaultHeaders: { Accept: "text/event-stream" },
-    dangerouslyAllowBrowser: true,
-    fetch: async (url, init) => {
-      return fetch(url, {
-        ...init,
-        headers: cleanHeaders(init?.headers),
-      });
-    },
+    // dangerouslyAllowBrowser: true,
+    // fetch: async (url, init) => {
+    //   return fetch(url, {
+    //     ...init,
+    //     headers: cleanHeaders(init?.headers),
+    //   });
+    // },
   });
 
   const stream = await client.beta.chat.completions.stream({

@@ -136,7 +136,6 @@ async function openaiStreaming({
     model,
     messages,
     stream: true,
-    user,
   });
 
   let fullMessage = '';

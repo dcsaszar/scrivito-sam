@@ -99,27 +99,25 @@ async function openaiStreaming({
                                  user,
                                }) {
   let baseURL = "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
-  let defaultQuery = null;
 
   switch (MODEL) {
     case "mistral" :
       model = "codestral-latest";
       apiKey = MISTRAL_API_KEY ? MISTRAL_API_KEY : apiKey;
       baseURL = MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : baseURL;
-      defaultQuery = null;
+      user = null;
       break;
     case "openai" :
       model = "gpt-4o"
       apiKey = OPENAI_API_KEY ? OPENAI_API_KEY : apiKey;
       baseURL = OPENAI_API_KEY ? "https://api.openai.com/v1" : baseURL;
-      defaultQuery = { tenant_id: instanceId }
       break;
     default :
       model = "gpt-4o"
       apiKey = OPENAI_API_KEY ? OPENAI_API_KEY : apiKey;
       baseURL = OPENAI_API_KEY ? "https://api.openai.com/v1" : baseURL;
-      defaultQuery = { tenant_id: instanceId }
   }
+
   const client = new OpenAI({
     apiKey: apiKey,
     baseURL: baseURL,
@@ -139,6 +137,7 @@ async function openaiStreaming({
     model,
     messages,
     stream: true,
+    user: user,
   }); // we cannot have the user parameter with mistral otherwise it cannot read the body
 
   let fullMessage = '';

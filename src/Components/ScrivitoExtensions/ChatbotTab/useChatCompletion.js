@@ -58,6 +58,14 @@ let MISTRAL_API_KEY =
     : // @ts-ignore
     import.meta.env.MISTRAL_API_KEY;
 
+let MODEL =
+  // @ts-ignore
+  typeof import.meta.env === "undefined"
+    ? // @ts-ignore
+    process.env.MODEL
+    : // @ts-ignore
+    import.meta.env.MODEL;
+
 async function startStreaming({
   apiKey,
   instanceId,
@@ -90,12 +98,31 @@ async function openaiStreaming({
                                  setMessages,
                                  user,
                                }) {
-  const client = new OpenAI({
-    apiKey: MISTRAL_API_KEY || OPENAI_API_KEY || apiKey,
-    baseURL: MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=",
+  let baseURL = "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+  let defaultQuery = null;
+  let defaultHeaders = null;
 
-    //defaultQuery: { tenant_id: instanceId },
-    defaultHeaders: { Accept: "text/event-stream" },
+  switch (MODEL) {
+    case "mistral" :
+      apiKey = MISTRAL_API_KEY ? MISTRAL_API_KEY : apiKey;
+      baseURL = MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+      defaultQuery = null;
+      defaultHeaders = { Accept: "text/event-stream" };
+      break;
+    case "openai" :
+      apiKey = OPENAI_API_KEY ? OPENAI_API_KEY : apiKey;
+      baseURL = OPENAI_API_KEY ? "https://api.openai.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+      defaultQuery = { tenant_id: instanceId }
+      defaultHeaders = { Accept: "*/*" };
+      break;
+    default :
+  }
+  const client = new OpenAI({
+    apiKey: apiKey,
+    baseURL: baseURL,
+
+    defaultQuery: defaultQuery,
+    defaultHeaders: defaultHeaders,
     dangerouslyAllowBrowser: true,
     fetch: async (url, init) => {
       return fetch(url, {
@@ -109,6 +136,7 @@ async function openaiStreaming({
     model,
     messages,
     stream: true,
+    user,
   });
 
   let fullMessage = '';

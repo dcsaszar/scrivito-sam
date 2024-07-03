@@ -111,16 +111,18 @@ async function openaiStreaming({
     stream: true,
   });
 
-  stream.on("content", () => {
-    const message = stream.currentChatCompletionSnapshot?.choices[0].message;
-    if (message) setCompletionMessage(message);
-  });
+  let fullMessage = '';
+  for await (const chunk of response) {
+    const message = chunk.choices[0]?.delta?.content;
+    if (message) {
+      fullMessage += message;
+      setCompletionMessage({ role: 'assistant', content: fullMessage });
+    }
+  }
 
-  return stream.finalChatCompletion().then(({ choices }) => {
-    setCompletionMessage(null);
-    setMessages(messages.concat(choices[0].message));
-    setLoading(false);
-  });
+  setCompletionMessage(null);
+  setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
+  setLoading(false);
 }
 
 function cleanHeaders(headers = {}) {

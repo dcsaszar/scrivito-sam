@@ -112,12 +112,14 @@ async function openaiStreaming({
 
   switch (MODEL) {
     case "mistral" :
+      model = "codestral-latest";
       apiKey = MISTRAL_API_KEY ? MISTRAL_API_KEY : apiKey;
       baseURL = MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
       defaultQuery = null;
       defaultHeaders = { Accept: "text/event-stream" };
       break;
     case "openai" :
+      model = "gpt-4o"
       apiKey = OPENAI_API_KEY ? OPENAI_API_KEY : apiKey;
       baseURL = OPENAI_API_KEY ? "https://api.openai.com/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
       defaultQuery = { tenant_id: instanceId }
@@ -141,7 +143,7 @@ async function openaiStreaming({
   });
 
   const response = await client.chat.completions.create({
-    MODEL_AI,
+    model,
     messages,
     stream: true,
   });

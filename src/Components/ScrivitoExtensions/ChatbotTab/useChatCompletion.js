@@ -88,7 +88,7 @@ async function openaiStreaming({
     apiKey: AI_API_KEY || OPENAI_API_KEY || apiKey,
     baseURL: AI_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=",
 
-    defaultQuery: { tenant_id: instanceId },
+    //defaultQuery: { tenant_id: instanceId },
     defaultHeaders: { Accept: "*/*" },
     dangerouslyAllowBrowser: true,
     fetch: async (url, init) => {

@@ -97,19 +97,18 @@ async function openaiStreaming({
     //defaultQuery: { tenant_id: instanceId },
     defaultHeaders: { Accept: "text/event-stream" },
     dangerouslyAllowBrowser: true,
-    // fetch: async (url, init) => {
-    //   return fetch(url, {
-    //     ...init,
-    //     headers: cleanHeaders(init?.headers),
-    //   });
-    // },
+    fetch: async (url, init) => {
+      return fetch(url, {
+        ...init,
+        headers: cleanHeaders(init?.headers),
+      });
+    },
   });
 
   const stream = await client.chat.completions.create({
     model,
     messages,
     stream: true,
-    user,
   });
 
   stream.on("content", () => {

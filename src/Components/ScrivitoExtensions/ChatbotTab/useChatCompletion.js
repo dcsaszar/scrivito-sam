@@ -105,7 +105,6 @@ async function openaiStreaming({
       model = "codestral-latest";
       apiKey = MISTRAL_API_KEY ? MISTRAL_API_KEY : apiKey;
       baseURL = MISTRAL_API_KEY ? "https://api.mistral.ai/v1" : baseURL;
-      user = null;
       break;
     case "openai" :
       model = "gpt-4o"
@@ -137,7 +136,6 @@ async function openaiStreaming({
     model,
     messages,
     stream: true,
-    user: user,
   }); // we cannot have the user parameter with mistral otherwise it cannot read the body
 
   let fullMessage = '';

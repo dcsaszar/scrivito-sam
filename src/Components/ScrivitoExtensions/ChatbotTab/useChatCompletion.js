@@ -51,7 +51,7 @@ let OPENAI_API_KEY =
     : // @ts-ignore
       import.meta.env.OPENAI_API_KEY;
 
-let MISTRAL_API_KEY = "jrJsuWD6oWpC1ARmXGcEVZCz187zQu77"
+let MISTRAL_API_KEY = /** API KEY **/
 
 async function startStreaming({
   apiKey,
@@ -82,13 +82,11 @@ async function startStreaming({
     default:
       await mistralStreaming({
         apiKey,
-        instanceId,
         messages,
         model,
         setCompletionMessage,
         setLoading,
         setMessages,
-        user,
       });
   }
 }

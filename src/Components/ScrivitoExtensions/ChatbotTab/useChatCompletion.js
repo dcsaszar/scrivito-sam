@@ -105,7 +105,7 @@ async function openaiStreaming({
     },
   });
 
-  const stream = await client.chat.completions.create({
+  const response = await client.chat.completions.create({
     model,
     messages,
     stream: true,

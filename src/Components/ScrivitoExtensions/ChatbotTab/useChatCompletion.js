@@ -111,7 +111,7 @@ async function openaiStreaming({
       break;
     case "openai" :
       apiKey = OPENAI_API_KEY ? OPENAI_API_KEY : apiKey;
-      baseURL = OPENAI_API_KEY ? "https://api.openai.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
+      baseURL = OPENAI_API_KEY ? "https://api.openai.com/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=";
       defaultQuery = { tenant_id: instanceId }
       defaultHeaders = { Accept: "*/*" };
       break;
@@ -136,7 +136,6 @@ async function openaiStreaming({
     model,
     messages,
     stream: true,
-    user,
   });
 
   let fullMessage = '';

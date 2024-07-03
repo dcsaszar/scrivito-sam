@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import MistralClient from "@mistralai/mistralai";
 import { useMemo, useState } from "react";
 
 export function useChatCompletion({ apiKey, instanceId, model, user }) {
@@ -51,7 +50,7 @@ let OPENAI_API_KEY =
     : // @ts-ignore
       import.meta.env.OPENAI_API_KEY;
 
-let MISTRAL_API_KEY = /** API KEY **/
+let AI_API_KEY = "jrJsuWD6oWpC1ARmXGcEVZCz187zQu77";
 
 async function startStreaming({
   apiKey,
@@ -63,32 +62,16 @@ async function startStreaming({
   setMessages,
   user,
 }) {
-
-  switch (model) {
-    case "openai":
-      await openaiStreaming({
-        apiKey,
-        instanceId,
-        messages,
-        model,
-        setCompletionMessage,
-        setLoading,
-        setMessages,
-        user,
-      });
-      break;
-    case "mistral":
-      throw Error("Unknown service.");
-    default:
-      await mistralStreaming({
-        apiKey,
-        messages,
-        model,
-        setCompletionMessage,
-        setLoading,
-        setMessages,
-      });
-  }
+  await openaiStreaming({
+    apiKey,
+    instanceId,
+    messages,
+    model,
+    setCompletionMessage,
+    setLoading,
+    setMessages,
+    user,
+  });
 }
 
 async function openaiStreaming({
@@ -102,10 +85,8 @@ async function openaiStreaming({
                                  user,
                                }) {
   const client = new OpenAI({
-    apiKey: OPENAI_API_KEY || apiKey,
-    baseURL: OPENAI_API_KEY
-      ? "https://api.openai.com/v1"
-      : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=",
+    apiKey: AI_API_KEY || OPENAI_API_KEY || apiKey,
+    baseURL: AI_API_KEY ? "https://api.mistral.ai/v1" : "https://i7ukqy3mhy3nzkn3dutmmzdx440xgtjk.lambda-url.eu-west-1.on.aws?ignore=",
 
     defaultQuery: { tenant_id: instanceId },
     defaultHeaders: { Accept: "*/*" },
@@ -135,38 +116,6 @@ async function openaiStreaming({
     setMessages(messages.concat(choices[0].message));
     setLoading(false);
   });
-}
-
-async function mistralStreaming({
-                                  apiKey,
-                                  messages,
-                                  model,
-                                  setCompletionMessage,
-                                  setLoading,
-                                  setMessages,
-                                }) {
-  apiKey = MISTRAL_API_KEY || apiKey;
-
-  const client = new MistralClient(apiKey);
-
-  const response = await client.chatStream({
-    model,
-    messages,
-    stream: true,
-  });
-
-  let fullMessage = '';
-  for await (const chunk of response) {
-    const message = chunk.choices[0]?.delta?.content;
-    if (message) {
-      fullMessage += message;
-      setCompletionMessage({ role: 'assistant', content: fullMessage });
-    }
-  }
-
-  setCompletionMessage(null);
-  setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
-  setLoading(false);
 }
 
 function cleanHeaders(headers = {}) {

@@ -1,6 +1,5 @@
 import OpenAI from "openai";
 import { useMemo, useState } from "react";
-import { ChatCompletionStream } from "openai/lib/ChatCompletionStream";
 
 export function useChatCompletion({ apiKey, instanceId, model, user }) {
   const [messages, setMessages] = useState([]);
@@ -149,18 +148,6 @@ async function openaiStreaming({
     setMessages(messages.concat(choices[0].message));
     setLoading(false);
   });
-  // let fullMessage = '';
-  // for await (const chunk of response) {
-  //   const message = chunk.choices[0]?.delta?.content;
-  //   if (message) {
-  //     fullMessage += message;
-  //     setCompletionMessage({ role: 'assistant', content: fullMessage });
-  //   }
-  // }
-  //
-  // setCompletionMessage(null);
-  // setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
-  // setLoading(false);
 }
 
 function cleanHeaders(headers = {}) {

@@ -140,19 +140,26 @@ async function openaiStreaming({
 
   stream.on("content", () => {
     const message = stream.currentChatCompletionSnapshot?.choices[0].message;
-    console.log(message);
-    if (message) {
-      setCompletionMessage(message);
-      console.log("setCompletionMessage done");
-    }
+    if (message) setCompletionMessage(message);
   });
 
-  console.log("before retrun");
   return stream.finalChatCompletion().then(({ choices }) => {
     setCompletionMessage(null);
     setMessages(messages.concat(choices[0].message));
     setLoading(false);
   });
+  // let fullMessage = '';
+  // for await (const chunk of response) {
+  //   const message = chunk.choices[0]?.delta?.content;
+  //   if (message) {
+  //     fullMessage += message;
+  //     setCompletionMessage({ role: 'assistant', content: fullMessage });
+  //   }
+  // }
+  //
+  // setCompletionMessage(null);
+  // setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
+  // setLoading(false);
 }
 
 function cleanHeaders(headers = {}) {

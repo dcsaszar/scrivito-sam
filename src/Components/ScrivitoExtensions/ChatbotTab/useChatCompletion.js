@@ -66,6 +66,14 @@ let MODEL =
     : // @ts-ignore
     import.meta.env.MODEL;
 
+let MODEL_AI =
+  // @ts-ignore
+  typeof import.meta.env === "undefined"
+    ? // @ts-ignore
+    process.env.MODEL_AI
+    : // @ts-ignore
+    import.meta.env.MODEL_AI;
+
 async function startStreaming({
   apiKey,
   instanceId,
@@ -133,7 +141,7 @@ async function openaiStreaming({
   });
 
   const response = await client.chat.completions.create({
-    model,
+    MODEL_AI,
     messages,
     stream: true,
   });

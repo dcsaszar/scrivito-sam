@@ -141,7 +141,10 @@ async function openaiStreaming({
   stream.on("content", () => {
     const message = stream.currentChatCompletionSnapshot?.choices[0].message;
     console.log(message);
-    if (message) setCompletionMessage(message);
+    if (message) {
+      setCompletionMessage(message);
+      console.log("setCompletionMessage done");
+    }
   });
 
   console.log("before retrun");

@@ -132,34 +132,34 @@ async function openaiStreaming({
     },
   });
 
-  const stream = await client.beta.chat.completions.stream({
+  const response = await client.beta.chat.completions.stream({
     model,
     messages,
     stream: true,
   }); // we cannot have the user parameter with mistral otherwise it cannot read the body
 
-  stream.on("content", () => {
-    const message = stream.currentChatCompletionSnapshot?.choices[0].message;
-    if (message) setCompletionMessage(message);
-  });
-
-  return stream.finalChatCompletion().then(({ choices }) => {
-    setCompletionMessage(null);
-    setMessages(messages.concat(choices[0].message));
-    setLoading(false);
-  });
-  // let fullMessage = '';
-  // for await (const chunk of response) {
-  //   const message = chunk.choices[0]?.delta?.content;
-  //   if (message) {
-  //     fullMessage += message;
-  //     setCompletionMessage({ role: 'assistant', content: fullMessage });
-  //   }
-  // }
+  // stream.on("content", () => {
+  //   const message = stream.currentChatCompletionSnapshot?.choices[0].message;
+  //   if (message) setCompletionMessage(message);
+  // });
   //
-  // setCompletionMessage(null);
-  // setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
-  // setLoading(false);
+  // return stream.finalChatCompletion().then(({ choices }) => {
+  //   setCompletionMessage(null);
+  //   setMessages(messages.concat(choices[0].message));
+  //   setLoading(false);
+  // });
+  let fullMessage = '';
+  for await (const chunk of response) {
+    const message = chunk.choices[0]?.delta?.content;
+    if (message) {
+      fullMessage += message;
+      setCompletionMessage({ role: 'assistant', content: fullMessage });
+    }
+  }
+
+  setCompletionMessage(null);
+  setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
+  setLoading(false);
 }
 
 function cleanHeaders(headers = {}) {

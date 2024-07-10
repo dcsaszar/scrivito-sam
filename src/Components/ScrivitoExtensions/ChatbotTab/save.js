@@ -48,7 +48,7 @@ export async function save(obj, widgetsDescription) {
         (name) => name === preferredAttributeName
       ) || widgetlistAttributeNames(container)[0];
     console.log("attributeName", attributeName);
-    const newWidgets = scrivitoWidgets.map(({ widget }) => widget);
+    const newWidgets = scrivitoWidgets.map(({ widget }) => widget.id === null); // add check on id to find only the new widget
     console.log("newWidgets", newWidgets);
 
     prevWidgets.forEach((prevWidget) => {

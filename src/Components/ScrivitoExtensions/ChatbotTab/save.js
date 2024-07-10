@@ -10,6 +10,7 @@ export function canBeSaved(obj, widgetsDescription) {
 
 export async function save(obj, widgetsDescription) {
   console.log("obj save", obj);
+  console.log("widgetsDescription save", widgetsDescription);
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
   const prevWidgets = flatWidgets(obj);
 
@@ -132,6 +133,7 @@ function cleanUp(rawValue, attributeType) {
 }
 
 function toScrivitoWidgets(obj, widgetsDescription) {
+  console.log("toScrivitoWidgets", obj);
   if (!widgetsDescription) return undefined;
   const prevWidgets = flatWidgets(obj);
   const usedIds = [];

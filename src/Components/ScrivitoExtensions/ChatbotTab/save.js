@@ -5,7 +5,7 @@ import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 
 export function canBeSaved(obj, widgetsDescription) {
-  return !!toScrivitoWidgets(obj, widgetsDescription);
+  return true;
 }
 
 export async function save(obj, widgetsDescription) {

@@ -6,11 +6,13 @@ export async function getWidgetsPrompt(obj) {
     flatWidgets(Scrivito.Obj.root())
   );
   console.log("rootWidgets", rootWidgets);
+  console.log("obj", obj);
   const pageWidgets = await Scrivito.load(() => flatWidgets(obj));
   console.log("pageWidgets", pageWidgets);
   const widgets = {};
   pageWidgets.concat(rootWidgets).forEach((w) => (widgets[w.objClass()] = w));
 
+  console.log("widgets", widgets);
   return Object.entries(widgets)
     .map(([className, widget]) => {
       const data = [];

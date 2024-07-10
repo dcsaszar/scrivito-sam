@@ -12,7 +12,9 @@ function partToWidget(part) {
   const result = { objClass: "TextWidget", id: null, _innerHtml: html };
 
   const hasWidgetData = html !== part;
-  console.log("parsehtml", html, part, hasWidgetData);
+  console.log("html", html);
+  console.log("part", part);
+  console.log("hasWidgetData", hasWidgetData);
   if (hasWidgetData) {
     const attributes = part.split(">")[0];
     const idMatch = attributes.match(/id="([a-f0-9]{8})"/);

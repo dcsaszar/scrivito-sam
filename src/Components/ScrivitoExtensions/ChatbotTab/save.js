@@ -18,14 +18,29 @@ export async function save(obj, widgetsDescription) {
     .map(({ widgetId }) => widgetId)
     .filter((w) => !!w);
   const prevWidgetIds = prevWidgets.map((widget) => widget.id());
-  const editWidgetIds = prevWidgetIds.filter((id) => widgetIds.includes(id));
-  const editWidgets = scrivitoWidgets.filter(({ widgetId }) =>
-    editWidgetIds.includes(widgetId)
+  const changeWidgetIds = prevWidgetIds.filter((id) => widgetIds.includes(id));
+
+  const editWidgets = scrivitoWidgets.filter(
+    ({ widgetId, modification }) =>
+      changeWidgetIds.includes(widgetId) && modification === "edit"
   );
+  console.log(editWidgets);
+
+  const deleteWidgets = scrivitoWidgets.filter(
+    ({ widgetId, modification }) =>
+      changeWidgetIds.includes(widgetId) && modification === "delete"
+  );
+
+  console.log(deleteWidgets);
 
   editWidgets.forEach(({ widget, attributes }) => {
     const widgetToUpdate = obj.widgets().find((w) => w.id() === widget.id());
     updateAttributes(widgetToUpdate, attributes);
+  });
+
+  deleteWidgets.forEach(({ widget }) => {
+    const widgetToDelete = obj.widgets().find((w) => w.id() === widget.id());
+    widgetToDelete.delete()
   });
 
   const hasNewWidgets = scrivitoWidgets.some(

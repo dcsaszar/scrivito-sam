@@ -2,7 +2,9 @@ import { sortBy } from "lodash-es";
 
 export function widgetlistAttributeNames(content) {
   const attributes = content.attributeDefinitions();
+  console.log("attributes", attributes);
   const attributeNames = Object.keys(attributes);
+  console.log("attributeNames", attributeNames);
 
   if (
     attributeNames.some(

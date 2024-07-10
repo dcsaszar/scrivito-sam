@@ -24,14 +24,11 @@ export async function save(obj, widgetsDescription) {
     ({ widgetId, modification }) =>
       changeWidgetIds.includes(widgetId) && modification === "edit"
   );
-  console.log(editWidgets);
 
   const deleteWidgets = scrivitoWidgets.filter(
     ({ widgetId, modification }) =>
       changeWidgetIds.includes(widgetId) && modification === "delete"
   );
-
-  console.log(deleteWidgets);
 
   editWidgets.forEach(({ widget, attributes }) => {
     const widgetToUpdate = obj.widgets().find((w) => w.id() === widget.id());

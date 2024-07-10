@@ -32,7 +32,7 @@ export async function save(obj, widgetsDescription) {
   );
   console.log("hasNewWidgets", hasNewWidgets);
   const isUpdateOnly =
-    !hasNewWidgets && widgetIds.join() === prevWidgetIds.join();
+    !hasNewWidgets && widgetIds.join() === prevWidgetIds.join(); //pertinent?
   console.log("isUpdateOnly", isUpdateOnly);
   if (!isUpdateOnly) {
     const firstPrevWidget = prevWidgets[0];
@@ -42,11 +42,14 @@ export async function save(obj, widgetsDescription) {
     const preferredAttributeName = firstPrevWidget
       ? containerAttributeName(firstPrevWidget)
       : "body";
+    console.log("preferredAttributeName", preferredAttributeName);
     const attributeName =
       widgetlistAttributeNames(container).find(
         (name) => name === preferredAttributeName
       ) || widgetlistAttributeNames(container)[0];
+    console.log("attributeName", attributeName);
     const newWidgets = scrivitoWidgets.map(({ widget }) => widget);
+    console.log("newWidgets", newWidgets);
 
     prevWidgets.forEach((prevWidget) => {
       const clearContainer = prevWidget.container();
@@ -63,9 +66,9 @@ export async function save(obj, widgetsDescription) {
     container.update({ [attributeName]: newWidgets });
   }
 
-  scrivitoWidgets.forEach(({ widget, attributes }) =>
-    updateAttributes(widget, attributes)
-  );
+  // scrivitoWidgets.forEach(({ widget, attributes }) => pertinent?
+  //   updateAttributes(widget, attributes)
+  // );
   await obj.finishSaving();
 }
 

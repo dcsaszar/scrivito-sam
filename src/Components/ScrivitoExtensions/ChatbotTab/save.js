@@ -63,9 +63,13 @@ export async function save(obj, widgetsDescription) {
       const clearContainer = prevWidget.container();
       const newWidget = newWidgets[index];
 
-      // Met à jour le container en ajoutant le nouveau widget sans retirer l'ancien
+      // Récupère la liste actuelle des widgets et évite les doublons
+      const currentWidgets = clearContainer.get(attributeName);
+      const updatedWidgets = Array.from(new Set([...currentWidgets, prevWidget, newWidget]));
+
+      // Met à jour le container en ajoutant le previousWidget et le newWidget sans doublons
       clearContainer.update({
-        [attributeName]: [...clearContainer.get(attributeName), prevWidget, newWidget]
+        [attributeName]: updatedWidgets
       });
     });
     // console.log("container", container);

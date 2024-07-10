@@ -5,7 +5,7 @@ import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 
 export function canBeSaved(obj, widgetsDescription) {
-  return widgetsDescription && widgetsDescription.length > 0;
+  return !!toScrivitoWidgets(obj, widgetsDescription);
 }
 
 export async function save(obj, widgetsDescription) {
@@ -56,8 +56,9 @@ export async function save(obj, widgetsDescription) {
       if (modification === 'edit') previousWidget = widget;
     });
 
-    console.log("newWidgets", newWidgets);
-    console.log("previousWidgets", previousWidgets);
+     //TODO: implement the new widget for that we need to add the widget section and column to the widget prompt to have a hierarchy
+    // console.log("newWidgets", newWidgets);
+    // console.log("previousWidgets", previousWidgets);
 
     previousWidgets.forEach((prevWidget, index) => {
       const clearContainer = prevWidget.container();
@@ -153,34 +154,37 @@ function cleanUp(rawValue, attributeType) {
 
 function toScrivitoWidgets(obj, widgetsDescription) {
   if (!widgetsDescription) return undefined;
+
   const prevWidgets = flatWidgets(obj);
   const usedIds = [];
-  const newWidgets = widgetsDescription.map(
-    ({ id, objClass, ...attributes }) => {
-      const existingWidget = prevWidgets.find((w) => w.id() === id);
-      if (
-        existingWidget &&
-        existingWidget.objClass() === objClass &&
-        !usedIds.includes(id)
-      ) {
-        usedIds.push(id);
-        return {
-          widget: existingWidget,
-          attributes,
-          modification: "edit",
-          widgetId: id,
-        };
-      }
-      const WidgetClass = Scrivito.getClass(objClass);
-      if (!WidgetClass) return null;
+  const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {
+    const existingWidget = prevWidgets.find((w) => w.id() === id);
+    if (existingWidget && existingWidget.objClass() === objClass && !usedIds.includes(id)) {
+      usedIds.push(id);
       return {
-        // @ts-ignore
-        widget: new WidgetClass({}),
+        widget: existingWidget,
         attributes,
-        modification: "new",
+        modification: "edit",
+        widgetId: id,
       };
     }
-  );
+    const WidgetClass = Scrivito.getClass(objClass);
+    if (!WidgetClass) return null;
+    return {
+      widget: new WidgetClass({}),
+      attributes,
+      modification: "new",
+    };
+  });
 
-  return newWidgets.filter((w) => w !== null);
+  const deleteWidgets = prevWidgets
+    .filter((w) => !usedIds.includes(w.id()))
+    .map((w) => ({
+      widget: w,
+      modification: "delete",
+      widgetId: w.id(),
+    }));
+
+  return [...newWidgets, ...deleteWidgets];
 }
+

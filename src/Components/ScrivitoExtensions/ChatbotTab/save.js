@@ -11,6 +11,7 @@ export function canBeSaved(obj, widgetsDescription) {
 export async function save(obj, widgetsDescription) {
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
   console.log("widgetsDescription", widgetsDescription);
+  console.log("scrivitoWidgets", scrivitoWidgets);
   const prevWidgets = flatWidgets(obj);
 
   const widgetIds = scrivitoWidgets

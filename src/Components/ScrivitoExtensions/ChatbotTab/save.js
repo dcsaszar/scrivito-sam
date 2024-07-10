@@ -62,12 +62,13 @@ export async function save(obj, widgetsDescription) {
         });
       });
     });
-    //container.update({ [attributeName]: newWidgets });
+    console.log("container", container);
+    container.update({ [attributeName]: newWidgets });
   }
 
-  // scrivitoWidgets.forEach(({ widget, attributes }) => pertinent?
-  //   updateAttributes(widget, attributes)
-  // );
+  scrivitoWidgets.forEach(({ widget, attributes }) => // pertinent?
+    updateAttributes(widget, attributes)
+  );
   await obj.finishSaving();
 }
 

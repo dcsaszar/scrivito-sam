@@ -69,11 +69,10 @@ export async function save(obj, widgetsDescription) {
           [name]: clearContainer
             .get(name)
             .filter((widget) => widget.id() !== prevWidget.id())
+        },
+        {
+          [attributeName]: [...clearContainer.get(attributeName), newWidget]
         });
-      });
-
-      clearContainer.add({
-        [attributeName]: [...clearContainer.get(attributeName), newWidget]
       });
     });
     // console.log("container", container);

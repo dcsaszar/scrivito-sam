@@ -63,13 +63,17 @@ export async function save(obj, widgetsDescription) {
       const clearContainer = prevWidget.container();
       const newWidget = newWidgets[index];
 
-      // Récupère la liste actuelle des widgets et évite les doublons
-      const currentWidgets = clearContainer.get(attributeName);
-      const updatedWidgets = Array.from(new Set([...currentWidgets, prevWidget, newWidget]));
+      // Met à jour le container avec le nouveau widget
+      widgetlistAttributeNames(clearContainer).forEach((name) => {
+        clearContainer.update({
+          [name]: clearContainer
+            .get(name)
+            .filter((widget) => widget.id() !== prevWidget.id())
+        });
+      });
 
-      // Met à jour le container en ajoutant le previousWidget et le newWidget sans doublons
-      clearContainer.update({
-        [attributeName]: updatedWidgets
+      clearContainer.add({
+        [attributeName]: [...clearContainer.get(attributeName), newWidget]
       });
     });
     // console.log("container", container);

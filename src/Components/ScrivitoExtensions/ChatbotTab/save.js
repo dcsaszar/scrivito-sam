@@ -43,27 +43,41 @@ export async function save(obj, widgetsDescription) {
       widgetlistAttributeNames(container).find(
         (name) => name === preferredAttributeName
       ) || widgetlistAttributeNames(container)[0];
-    const newWidgets = scrivitoWidgets
-      .filter(({ modification }) => modification === 'new')
-      .map(({ widget }) => widget); // add check on id to find only the new widget
-    console.log("newWidgets", newWidgets);
 
-    prevWidgets.forEach((prevWidget) => {
+    const newWidgets = [];
+    const previousWidgets = [];
+    let previousWidget = null;
+
+    scrivitoWidgets.forEach(({ widget, modification }) => {
+      if (modification === 'new' && previousWidget !== null) {
+        newWidgets.push(widget);
+        previousWidgets.push(previousWidget);
+      }
+      if (modification === 'edit') previousWidget = widget;
+    });
+
+    console.log("newWidgets", newWidgets);
+    console.log("previousWidgets", previousWidgets);
+
+    previousWidgets.forEach((prevWidget, index) => {
       const clearContainer = prevWidget.container();
-      console.log("clearContainer", clearContainer);
+      const newWidget = newWidgets[index];
+
+      // Met à jour le container avec le nouveau widget
       widgetlistAttributeNames(clearContainer).forEach((name) => {
-        console.log(name);
         clearContainer.update({
           [name]: clearContainer
             .get(name)
-            .filter((widget) =>
-              widget.widgets().some((w) => w.id() === container.id())
-            ),
+            .filter((widget) => widget.id() !== prevWidget.id())
         });
       });
+
+      clearContainer.update({
+        [attributeName]: [...clearContainer.get(attributeName), newWidget]
+      });
     });
-    console.log("container", container);
-    container.update({ [attributeName]: newWidgets });
+    // console.log("container", container);
+    // container.update({ [attributeName]: newWidgets });
   }
 
   scrivitoWidgets.forEach(({ widget, attributes }) => // pertinent?

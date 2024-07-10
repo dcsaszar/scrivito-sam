@@ -23,6 +23,7 @@ export const prompts = {
 * HTML starts with <html> and ends with </html> and is enclosed in markdown.
 
 * You have to return the full HTML code changed
+* You should not add comment on the HTML code
 
 The following HTML is the current input:
 

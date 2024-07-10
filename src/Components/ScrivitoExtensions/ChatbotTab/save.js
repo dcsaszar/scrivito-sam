@@ -31,24 +31,18 @@ export async function save(obj, widgetsDescription) {
   const hasNewWidgets = scrivitoWidgets.some(
     ({ modification }) => modification === "new"
   );
-  console.log("hasNewWidgets", hasNewWidgets);
   const isUpdateOnly =
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join(); //pertinent?
-  console.log("isUpdateOnly", isUpdateOnly);
   if (!isUpdateOnly) {
     const firstPrevWidget = prevWidgets[0];
-    console.log("firstPrevWidget", firstPrevWidget);
     const container = firstPrevWidget?.container() || obj;
-    console.log("container", container);
     const preferredAttributeName = firstPrevWidget
       ? containerAttributeName(firstPrevWidget)
       : "body";
-    console.log("preferredAttributeName", preferredAttributeName);
     const attributeName =
       widgetlistAttributeNames(container).find(
         (name) => name === preferredAttributeName
       ) || widgetlistAttributeNames(container)[0];
-    console.log("attributeName", attributeName);
     const newWidgets = scrivitoWidgets
       .filter(({ modification }) => modification === 'new')
       .map(({ widget }) => widget); // add check on id to find only the new widget
@@ -56,7 +50,9 @@ export async function save(obj, widgetsDescription) {
 
     prevWidgets.forEach((prevWidget) => {
       const clearContainer = prevWidget.container();
+      console.log("clearContainer", clearContainer);
       widgetlistAttributeNames(clearContainer).forEach((name) => {
+        console.log(name);
         clearContainer.update({
           [name]: clearContainer
             .get(name)
@@ -66,7 +62,7 @@ export async function save(obj, widgetsDescription) {
         });
       });
     });
-    container.update({ [attributeName]: newWidgets });
+    //container.update({ [attributeName]: newWidgets });
   }
 
   // scrivitoWidgets.forEach(({ widget, attributes }) => pertinent?

@@ -63,17 +63,9 @@ export async function save(obj, widgetsDescription) {
       const clearContainer = prevWidget.container();
       const newWidget = newWidgets[index];
 
-      // Met à jour le container avec le nouveau widget
-      widgetlistAttributeNames(clearContainer).forEach((name) => {
-        clearContainer.update({
-          [name]: clearContainer
-            .get(name)
-            .filter((widget) => widget.id() !== prevWidget.id())
-        });
-      });
-
+      // Met à jour le container en ajoutant le nouveau widget sans retirer l'ancien
       clearContainer.update({
-        [attributeName]: [...clearContainer.get(attributeName), newWidget]
+        [attributeName]: [...clearContainer.get(attributeName), prevWidget, newWidget]
       });
     });
     // console.log("container", container);

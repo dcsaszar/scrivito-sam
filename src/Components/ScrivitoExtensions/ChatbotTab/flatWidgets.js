@@ -1,6 +1,7 @@
 import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 
 export function flatWidgets(content) {
+  console.log("content", content);
   return widgetlistAttributeNames(content).flatMap((attributeName) =>
     content
       .get(attributeName)

@@ -5,7 +5,7 @@ import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 
 export function canBeSaved(obj, widgetsDescription) {
-  return true;
+  return widgetsDescription && widgetsDescription.length > 0;
 }
 
 export async function save(obj, widgetsDescription) {

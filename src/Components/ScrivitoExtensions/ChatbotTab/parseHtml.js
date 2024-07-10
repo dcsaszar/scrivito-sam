@@ -12,12 +12,11 @@ function partToWidget(part) {
   const result = { objClass: "TextWidget", id: null, _innerHtml: html };
 
   const hasWidgetData = html !== part;
-  console.log("html", html);
-  console.log("part", part);
-  console.log("hasWidgetData", hasWidgetData);
   if (hasWidgetData) {
     const attributes = part.split(">")[0];
+    console.log("attributes", attributes);
     const idMatch = attributes.match(/id="([a-f0-9]{8})"/);
+    console.log("idMatch", idMatch);
     if (idMatch) {
       const [, id] = idMatch;
       result.id = id;

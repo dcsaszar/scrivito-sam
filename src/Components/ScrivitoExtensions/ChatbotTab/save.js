@@ -50,7 +50,7 @@ export async function save(obj, widgetsDescription) {
       ) || widgetlistAttributeNames(container)[0];
     console.log("attributeName", attributeName);
     const newWidgets = scrivitoWidgets
-      .filter(({ widget }) => widget.id === null)
+      .filter(({ modification }) => modification === 'new')
       .map(({ widget }) => widget); // add check on id to find only the new widget
     console.log("newWidgets", newWidgets);
 

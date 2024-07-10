@@ -263,7 +263,7 @@ const Content = React.memo(({ content, obj, language, loading }) => {
   });
 });
 
-const AcceptButton = Scrivito.connect(function ({
+const AcceptButton = Scrivito.connect(function AcceptButton({
   obj,
   widgetsDescription,
   title,

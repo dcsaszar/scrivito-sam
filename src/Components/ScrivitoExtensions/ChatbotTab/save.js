@@ -9,10 +9,10 @@ export function canBeSaved(obj, widgetsDescription) {
 }
 
 export async function save(obj, widgetsDescription) {
-  console.log("obj save", obj);
-  console.log("widgetsDescription save", widgetsDescription);
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
+  console.log("scrivitoWidgets", scrivitoWidgets);
   const prevWidgets = flatWidgets(obj);
+  console.log("prevWidgets", prevWidgets);
 
   const widgetIds = scrivitoWidgets
     .map(({ widgetId }) => widgetId)
@@ -22,6 +22,7 @@ export async function save(obj, widgetsDescription) {
   const editWidgets = scrivitoWidgets.filter(({ widgetId }) =>
     editWidgetIds.includes(widgetId)
   );
+  console.log("editWidgets", editWidgets);
 
   editWidgets.forEach(({ widget, attributes }) => {
     const widgetToUpdate = obj.widgets().find((w) => w.id() === widget.id());
@@ -133,7 +134,6 @@ function cleanUp(rawValue, attributeType) {
 }
 
 function toScrivitoWidgets(obj, widgetsDescription) {
-  console.log("toScrivitoWidgets", obj);
   if (!widgetsDescription) return undefined;
   const prevWidgets = flatWidgets(obj);
   const usedIds = [];

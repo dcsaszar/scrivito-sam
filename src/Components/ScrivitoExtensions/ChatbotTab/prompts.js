@@ -22,6 +22,8 @@ export const prompts = {
 * Widgets keep their "id" attribute.
 * HTML starts with <html> and ends with </html> and is enclosed in markdown.
 
+* You have to return the full HTML code changed
+
 The following HTML is the current input:
 
 \`\`\`html

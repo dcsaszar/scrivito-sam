@@ -1,11 +1,18 @@
 import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 
 export function flatWidgets(content) {
-  return widgetlistAttributeNames(content).flatMap((attributeName) =>
-    content
-      .get(attributeName)
-      .flatMap((widget) =>
-        widgetlistAttributeNames(widget).length ? flatWidgets(widget) : widget
-      )
-  );
+  return widgetlistAttributeNames(content).flatMap((attributeName) => {
+    const widgets = content.get(attributeName);
+    return widgets.map((widget) => {
+      const nestedWidgetLists = widgetlistAttributeNames(widget);
+      if (nestedWidgetLists.length) {
+        return {
+          ...widget,
+          nestedContent: flatWidgets(widget) // Include nested content while preserving the current widget
+        };
+      } else {
+        return widget;
+      }
+    });
+  });
 }

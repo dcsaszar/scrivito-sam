@@ -9,6 +9,7 @@ export function canBeSaved(obj, widgetsDescription) {
 }
 
 export async function save(obj, widgetsDescription) {
+  console.log("obj save", obj);
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
   const prevWidgets = flatWidgets(obj);
 

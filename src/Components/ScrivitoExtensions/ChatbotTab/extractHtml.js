@@ -3,6 +3,7 @@ import { flatWidgets } from "./flatWidgets.js";
 import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 
 export async function extractHtml(obj) {
+  console.log("obj", obj);
   return Scrivito.load(() => {
     const widgets = flatWidgets(obj);
     const html = widgets

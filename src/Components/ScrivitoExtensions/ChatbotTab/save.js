@@ -10,6 +10,7 @@ export function canBeSaved(obj, widgetsDescription) {
 
 export async function save(obj, widgetsDescription) {
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
+  console.log("widgetsDescription", widgetsDescription);
   const prevWidgets = flatWidgets(obj);
 
   const widgetIds = scrivitoWidgets
@@ -29,12 +30,15 @@ export async function save(obj, widgetsDescription) {
   const hasNewWidgets = scrivitoWidgets.some(
     ({ modification }) => modification === "new"
   );
+  console.log("hasNewWidgets", hasNewWidgets);
   const isUpdateOnly =
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join();
-
+  console.log("isUpdateOnly", isUpdateOnly);
   if (!isUpdateOnly) {
     const firstPrevWidget = prevWidgets[0];
+    console.log("firstPrevWidget", firstPrevWidget);
     const container = firstPrevWidget?.container() || obj;
+    console.log("container", container);
     const preferredAttributeName = firstPrevWidget
       ? containerAttributeName(firstPrevWidget)
       : "body";

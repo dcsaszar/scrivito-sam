@@ -5,10 +5,13 @@ export async function getWidgetsPrompt(obj) {
   const rootWidgets = await Scrivito.load(() =>
     flatWidgets(Scrivito.Obj.root())
   );
-  let children = Scrivito.Obj.root().children();
-  for (let child of children) {
-    console.log(child.get("title"));
-  }
+  const pages = await Scrivito.load(() => {
+    let children = Scrivito.Obj.root().children();
+    for (let child of children) {
+      console.log(child.get("title"));
+    }
+  });
+  console.log(pages);
   console.log("rootWidgets", rootWidgets);
   console.log("obj", obj);
   const pageWidgets = await Scrivito.load(() => flatWidgets(obj));

@@ -14,14 +14,14 @@ function partToWidget(part) {
   const hasWidgetData = html !== part;
   if (hasWidgetData) {
     const attributes = part.split(">")[0];
-    console.log("attributes", attributes);
     const idMatch = attributes.match(/id="([a-f0-9]{8})"/);
-    console.log("idMatch", idMatch);
     if (idMatch) {
       const [, id] = idMatch;
       result.id = id;
     }
     const typeMatch = attributes.match(/type="([A-Z][a-zA-Z]*Widget)"/);
+    console.log("typeMatch", typeMatch);
+    console.log(Scrivito.getClass(typeMatch[1]));
     if (typeMatch && Scrivito.getClass(typeMatch[1]) !== null) {
       const [, type] = typeMatch;
       result.objClass = type;

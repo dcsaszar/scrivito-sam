@@ -31,7 +31,9 @@ export async function extractHtml(obj) {
 }
 
 function getAttributesHtml(content, excludedAttributeName) {
-  const attributes = { id: content.id(), type: content.objClass() };
+  const attributes = content.nestedContent
+    ? { id: content.widget.id(), type: content.widget.objClass() }
+    : { id: content.id(), type: content.objClass() };
 
   Object.entries(content.attributeDefinitions()).forEach(
     ([attributeName, [attributeType]]) => {

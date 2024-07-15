@@ -20,8 +20,8 @@ export async function getWidgetsPrompt(obj) {
   return Object.entries(widgets)
     .map(([className, widget]) => {
       const data = [];
-      console.log("widget", widget);
-      Object.entries(widget.attributeDefinitions()).forEach(
+      console.log("widget", widget._scrivitoPrivateContent);
+      Object.entries(widget._scrivitoPrivateContent.attributeDefinitions()).forEach(
         ([attributeName, [attributeType, { values }]]) => {
           if (
             ["enum", "multienum", "boolean", "float", "integer"].includes(

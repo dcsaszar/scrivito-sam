@@ -8,7 +8,7 @@ export function flatWidgets(content) {
       if (nestedWidgetLists.length) {
         console.log(widget);
         return {
-          ...widget,
+          widget,
           nestedContent: flatWidgets(widget)
         };
       } else {

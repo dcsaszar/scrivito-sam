@@ -17,6 +17,7 @@ export async function getWidgetsPrompt(obj) {
 
   pageWidgets.concat(rootWidgets).forEach(extractWidgets);
 
+  console.log(widgets);
   return Object.entries(widgets)
     .map(([className, widget]) => {
       const data = [];

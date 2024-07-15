@@ -194,7 +194,7 @@ function toScrivitoWidgets(obj, widgetsDescription) {
     .map((w) => ({
       widget: w,
       modification: "delete",
-      widgetId: w.id(),
+      widgetId: w.nestedContent ? w.widget.id() : w.id(),
     }));
 
   return [...newWidgets, ...deleteWidgets];

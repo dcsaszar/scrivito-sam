@@ -6,7 +6,9 @@ export function flatWidgets(content) {
     return widgets.map((widget) => {
       const nestedWidgetLists = widgetlistAttributeNames(widget);
       if (nestedWidgetLists.length) {
-        return widget && flatWidgets(widget)
+        return {
+          widget
+        } && flatWidgets(widget)
       } else {
         return widget;
       }

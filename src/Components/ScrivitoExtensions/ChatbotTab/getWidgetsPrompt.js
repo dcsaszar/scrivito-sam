@@ -8,7 +8,15 @@ export async function getWidgetsPrompt(obj) {
   const pageWidgets = await Scrivito.load(() => flatWidgets(obj));
   console.log("pageWidgets", pageWidgets);
   const widgets = {};
-  pageWidgets.concat(rootWidgets).forEach((w) => (widgets[w.objClass()] = w));
+
+  function extractWidgets(w) {
+    widgets[w.objClass()] = w;
+    if (w.nestedContent) {
+      w.nestedContent.forEach(extractWidgets);
+    }
+  }
+
+  pageWidgets.concat(rootWidgets).forEach(extractWidgets);
 
   console.log("widgets", widgets);
   return Object.entries(widgets)
@@ -35,4 +43,18 @@ export async function getWidgetsPrompt(obj) {
       return `  * <widget type="${className} ${data.join(" ")}">...</widget>`;
     })
     .join("\n");
+}
+
+export function extractObjClasses(widgets) {
+  const classes = [];
+
+  function extract(widget) {
+    classes.push(widget.objClass());
+    if (widget.nestedContent) {
+      widget.nestedContent.forEach(extract);
+    }
+  }
+
+  widgets.forEach(extract);
+  return classes;
 }

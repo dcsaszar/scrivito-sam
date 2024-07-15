@@ -170,7 +170,7 @@ function toScrivitoWidgets(obj, widgetsDescription) {
   const prevWidgets = flatWidgets(obj);
   const usedIds = [];
   const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {
-    const existingWidget = prevWidgets.find((w) => w.id() === id);
+    const existingWidget = prevWidgets.find((w) => w.nestedContent ? w.widget.id() === id : w.id() === id);
     if (existingWidget && existingWidget.objClass() === objClass && !usedIds.includes(id)) {
       usedIds.push(id);
       return {
@@ -190,7 +190,7 @@ function toScrivitoWidgets(obj, widgetsDescription) {
   });
 
   const deleteWidgets = prevWidgets
-    .filter((w) => !usedIds.includes(w.id()))
+    .filter((w) => !usedIds.includes(w.nestedContent ? w.widget.id() : w.id()))
     .map((w) => ({
       widget: w,
       modification: "delete",

@@ -6,10 +6,7 @@ export function flatWidgets(content) {
     return widgets.map((widget) => {
       const nestedWidgetLists = widgetlistAttributeNames(widget);
       if (nestedWidgetLists.length) {
-        return {
-          ...widget,
-          nestedContent: flatWidgets(widget) // Include nested content while preserving the current widget
-        };
+        return widget && flatWidgets(widget)
       } else {
         return widget;
       }

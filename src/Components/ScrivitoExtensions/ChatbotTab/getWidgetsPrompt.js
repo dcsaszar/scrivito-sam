@@ -9,7 +9,7 @@ export async function getWidgetsPrompt(obj) {
   const widgets = {};
 
   function extractWidgets(w) {
-    widgets[w._scrivitoPrivateContent.objClass()] = w;
+    widgets[w._scrivitoPrivateContent.objClass()] = w._scrivitoPrivateContent;
     if (w.nestedContent) {
       w.nestedContent.forEach(extractWidgets);
     }

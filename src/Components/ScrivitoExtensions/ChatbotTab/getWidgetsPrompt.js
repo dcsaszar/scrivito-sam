@@ -42,6 +42,7 @@ export async function getWidgetsPrompt(obj) {
           }
         }
       );
+      console.log("ici");
       return `  * <widget type="${className} ${data.join(" ")}">...</widget>`;
     })
     .join("\n");

@@ -9,6 +9,7 @@ export async function getWidgetsPrompt(obj) {
   const widgets = {};
 
   function extractWidgets(w) {
+    console.log(w);
     if (w.nestedContent) {
       widgets[w.widget.objClass()] = w.widget;
       w.nestedContent.forEach(extractWidgets);
@@ -19,11 +20,9 @@ export async function getWidgetsPrompt(obj) {
 
   pageWidgets.concat(rootWidgets).forEach(extractWidgets);
 
-  console.log(widgets);
   return Object.entries(widgets)
     .map(([className, widget]) => {
       const data = [];
-      console.log(widget);
       Object.entries(widget.attributeDefinitions()).forEach(
         ([attributeName, [attributeType, { values }]]) => {
           if (
@@ -42,7 +41,6 @@ export async function getWidgetsPrompt(obj) {
           }
         }
       );
-      console.log("ici");
       return `  * <widget type="${className} ${data.join(" ")}">...</widget>`;
     })
     .join("\n");

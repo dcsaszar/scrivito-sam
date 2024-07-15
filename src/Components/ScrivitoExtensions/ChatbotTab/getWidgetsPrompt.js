@@ -43,17 +43,3 @@ export async function getWidgetsPrompt(obj) {
     })
     .join("\n");
 }
-
-export function extractObjClasses(widgets) {
-  const classes = [];
-
-  function extract(widget) {
-    classes.push(widget.objClass());
-    if (widget.nestedContent) {
-      widget.nestedContent.forEach(extract);
-    }
-  }
-
-  widgets.forEach(extract);
-  return classes;
-}

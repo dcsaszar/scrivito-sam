@@ -7,12 +7,7 @@ export async function extractHtml(obj) {
     const widgets = flatWidgets(obj);
     const html = widgets
       .map((w) => {
-        let widgetClass = {};
-        if(w.nestedContent){
-          widgetClass = w.widget.objClass();
-        }else{
-          widgetClass = w.objClass();
-        }
+        const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
         const primaryAttributeName = getPrimaryAttributeName(w);
         const inner = primaryAttributeName
           ? getStringValue(w, primaryAttributeName)
@@ -31,9 +26,8 @@ export async function extractHtml(obj) {
 }
 
 function getAttributesHtml(content, excludedAttributeName) {
-  const attributes = content.nestedContent
-    ? { id: content.widget.id(), type: content.widget.objClass() }
-    : { id: content.id(), type: content.objClass() };
+  content = content.nestedContent ? content.widget : content
+  const attributes = { id: content.id(), type: content.objClass() };
 
   Object.entries(content.attributeDefinitions()).forEach(
     ([attributeName, [attributeType]]) => {

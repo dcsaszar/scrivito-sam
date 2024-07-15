@@ -7,7 +7,12 @@ export async function extractHtml(obj) {
     const widgets = flatWidgets(obj);
     const html = widgets
       .map((w) => {
-        const widgetClass = w.objClass();
+        let widgetClass = {};
+        if(w.nestedContent){
+          widgetClass = w.widget.objClass();
+        }else{
+          widgetClass = w.objClass();
+        }
         const primaryAttributeName = getPrimaryAttributeName(w);
         const inner = primaryAttributeName
           ? getStringValue(w, primaryAttributeName)

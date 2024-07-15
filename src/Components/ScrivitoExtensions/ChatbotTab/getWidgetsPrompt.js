@@ -10,6 +10,8 @@ export async function getWidgetsPrompt(obj) {
   const widgets = {};
 
   function extractWidgets(w) {
+    console.log(w);
+    console.log(w.objClass());
     widgets[w.objClass()] = w;
     if (w.nestedContent) {
       w.nestedContent.forEach(extractWidgets);

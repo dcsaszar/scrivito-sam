@@ -7,8 +7,9 @@ export function flatWidgets(content) {
       const nestedWidgetLists = widgetlistAttributeNames(widget);
       if (nestedWidgetLists.length) {
         return {
-          widget
-        } && flatWidgets(widget)
+          ...widget,
+          nestedContent: flatWidgets(widget)
+        };
       } else {
         return widget;
       }

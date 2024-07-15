@@ -9,11 +9,11 @@ export async function getWidgetsPrompt(obj) {
   const widgets = {};
 
   function extractWidgets(w) {
-    console.log(w);
-    console.log(w.widget);
-    widgets[w.widget.objClass()] = w.widget;
     if (w.nestedContent) {
+      widgets[w.widget.objClass()] = w.widget;
       w.nestedContent.forEach(extractWidgets);
+    }else{
+      widgets[w.objClass()] = w;
     }
   }
 

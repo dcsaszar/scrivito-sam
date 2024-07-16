@@ -6,7 +6,7 @@ export async function extractHtml(obj) {
   return Scrivito.load(() => {
     const widgets = flatWidgets(obj);
 
-    console.log(htmlGenerator(widgets));
+    console.log(htmlGenerator(widgets, 1));
     const html = widgets
       .map((w) => {
         const widgetClass = w.widget.objClass();
@@ -28,7 +28,9 @@ export async function extractHtml(obj) {
   });
 }
 
-function htmlGenerator(widgets){
+function htmlGenerator(widgets, deep){
+  const space = "  ";
+  console.log("deep*space", deep*space);
   return widgets
     .map((w) => {
       const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
@@ -41,8 +43,8 @@ function htmlGenerator(widgets){
           ? w.get("style")
           : "";
       if (w.nestedContent) {
-        const widgetHTML = htmlGenerator(w.nestedContent);
-        return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>\n${widgetHTML}\n</widget>`;
+        const widgetHTML = htmlGenerator(w.nestedContent, deep+1);
+        return `${deep*space}<widget ${getAttributesHtml(w, primaryAttributeName)}>\n${widgetHTML}\n</widget>`;
       }
       return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${
         tag ? `<${tag}>` : ""

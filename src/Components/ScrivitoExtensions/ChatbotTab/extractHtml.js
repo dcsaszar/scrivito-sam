@@ -29,8 +29,7 @@ export async function extractHtml(obj) {
 }
 
 function htmlGenerator(widgets, deep){
-  const space = "  ";
-  console.log("deep*space", deep*space);
+  const space = "  ".repeat(deep);
   return widgets
     .map((w) => {
       const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
@@ -44,9 +43,9 @@ function htmlGenerator(widgets, deep){
           : "";
       if (w.nestedContent) {
         const widgetHTML = htmlGenerator(w.nestedContent, deep+1);
-        return `${deep*space}<widget ${getAttributesHtml(w, primaryAttributeName)}>\n${widgetHTML}\n</widget>`;
+        return `${space}<widget ${getAttributesHtml(w, primaryAttributeName)}>\n${widgetHTML}\n${space}</widget>`;
       }
-      return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${
+      return `${space}<widget ${getAttributesHtml(w, primaryAttributeName)}>${
         tag ? `<${tag}>` : ""
       }${inner}${tag ? `</${tag}>` : ""}</widget>`;
     })

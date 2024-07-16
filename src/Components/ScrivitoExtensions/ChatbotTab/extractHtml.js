@@ -5,9 +5,11 @@ import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 export async function extractHtml(obj) {
   return Scrivito.load(() => {
     const widgets = flatWidgets(obj);
+
+    console.log(htmlGenerator(widgets));
     const html = widgets
       .map((w) => {
-        const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
+        const widgetClass = w.widget.objClass();
         const primaryAttributeName = getPrimaryAttributeName(w);
         const inner = primaryAttributeName
           ? getStringValue(w, primaryAttributeName)
@@ -21,8 +23,31 @@ export async function extractHtml(obj) {
         }${inner}${tag ? `</${tag}>` : ""}</widget>`;
       })
       .join("\n");
+
     return `<html ${getAttributesHtml(obj)}>\n${html}\n</html>`;
   });
+}
+
+function htmlGenerator(widgets){
+  widgets
+    .map((w) => {
+      const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
+      const primaryAttributeName = getPrimaryAttributeName(w);
+      const inner = primaryAttributeName
+        ? getStringValue(w, primaryAttributeName)
+        : "";
+      const tag =
+        widgetClass.startsWith("Headline") && w.get("style")?.length === 2
+          ? w.get("style")
+          : "";
+      if (!w.nestedContent) {
+        return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${htmlGenerator(w.nestedConent)}</widget>`;
+      }
+      return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${
+        tag ? `<${tag}>` : ""
+      }${inner}${tag ? `</${tag}>` : ""}</widget>`;
+    })
+    .join("\n");
 }
 
 function getAttributesHtml(content, excludedAttributeName) {

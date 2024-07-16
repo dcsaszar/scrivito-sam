@@ -172,10 +172,6 @@ function toScrivitoWidgets(obj, widgetsDescription) {
   const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {
     let existingWidget = prevWidgets.find((w) => w.nestedContent ? w.widget.id() === id : w.id() === id);
     if (existingWidget) existingWidget = existingWidget.nestedContent ? existingWidget.widget : existingWidget
-    if (existingWidget) {
-      console.log(existingWidget);
-      console.log(existingWidget.objClass());
-    }
     if (existingWidget && existingWidget.objClass() === objClass && !usedIds.includes(id)) {
       usedIds.push(id);
       return {

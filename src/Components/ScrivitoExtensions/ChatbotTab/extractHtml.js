@@ -29,7 +29,7 @@ export async function extractHtml(obj) {
 }
 
 function htmlGenerator(widgets){
-  widgets
+  return widgets
     .map((w) => {
       const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
       const primaryAttributeName = getPrimaryAttributeName(w);

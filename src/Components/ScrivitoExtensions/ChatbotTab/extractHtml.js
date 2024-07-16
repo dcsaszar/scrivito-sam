@@ -5,26 +5,7 @@ import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 export async function extractHtml(obj) {
   return Scrivito.load(() => {
     const widgets = flatWidgets(obj);
-
-    console.log(htmlGenerator(widgets, 1));
-    const html = widgets
-      .map((w) => {
-        const widgetClass = w.widget.objClass();
-        const primaryAttributeName = getPrimaryAttributeName(w);
-        const inner = primaryAttributeName
-          ? getStringValue(w, primaryAttributeName)
-          : "";
-        const tag =
-          widgetClass.startsWith("Headline") && w.get("style")?.length === 2
-            ? w.get("style")
-            : "";
-        return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${
-          tag ? `<${tag}>` : ""
-        }${inner}${tag ? `</${tag}>` : ""}</widget>`;
-      })
-      .join("\n");
-
-    return `<html ${getAttributesHtml(obj)}>\n${html}\n</html>`;
+    return `<html ${getAttributesHtml(obj)}>\n${htmlGenerator(widgets, 1)}\n</html>`;
   });
 }
 

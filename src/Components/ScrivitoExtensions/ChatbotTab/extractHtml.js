@@ -40,8 +40,9 @@ function htmlGenerator(widgets){
         widgetClass.startsWith("Headline") && w.get("style")?.length === 2
           ? w.get("style")
           : "";
-      if (!w.nestedContent) {
-        return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${htmlGenerator(w.nestedConent)}</widget>`;
+      if (w.nestedContent) {
+        const widgetHTML = htmlGenerator(w.nestedContent);
+        return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>\n${widgetHTML}\n</widget>`;
       }
       return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${
         tag ? `<${tag}>` : ""

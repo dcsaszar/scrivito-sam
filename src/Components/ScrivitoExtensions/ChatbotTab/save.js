@@ -81,16 +81,17 @@ export async function save(obj, widgetsDescription) {
       console.log("newWidget", newWidget);
       // Met à jour le container avec le nouveau widget
       widgetlistAttributeNames(clearContainer).forEach((name) => {
-        clearContainer.update({
-          [name]: clearContainer
-            .get(name)
-            .filter((widget) => widget.id() !== prevWidget.id())
-        });
+        console.log(clearContainer.get(name.toString()));
+        // clearContainer.update({
+        //   [name]: clearContainer
+        //     .get(name)
+        //     .filter((widget) => widget.id() !== prevWidget.id())
+        // });
       });
 
-      clearContainer.update({
-        [attributeName]: [...clearContainer.get(attributeName), newWidget]
-      });
+      // clearContainer.update({
+      //   [attributeName]: [...clearContainer.get(attributeName), newWidget]
+      // });
     });
     console.log("container", container);
     container.update({ [attributeName]: newWidgets })

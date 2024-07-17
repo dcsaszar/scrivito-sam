@@ -84,8 +84,9 @@ export async function save(obj, widgetsDescription) {
       widgetlistAttributeNames(clearContainer).forEach((name) => {
         console.log("widget name", clearContainer.get(name.toString()));
         console.log(clearContainer.attributeDefinitions());
+        console.log(prevWidget.attributeDefinitions());
         clearContainer.update({
-          [attributeName]: [...clearContainer.get(name.toString()), newWidget]
+          content: [...clearContainer.get(name.toString()), newWidget]
         })
       });
     });
@@ -95,6 +96,7 @@ export async function save(obj, widgetsDescription) {
 
 function containerAttributeName(widget) {
   const container = widget.container();
+  console.log(container);
   return widgetlistAttributeNames(container).find((name) =>
     container.get(name).some((w) => w.id() === widget.id())
   );

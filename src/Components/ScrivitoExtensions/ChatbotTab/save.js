@@ -1,6 +1,6 @@
 import * as Scrivito from "scrivito";
 
-import { flatWidgets } from "./flatWidgets.js";
+import { flatWidgets, flatWidgetsList } from "./flatWidgets.js";
 import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 
@@ -167,7 +167,8 @@ function cleanUp(rawValue, attributeType) {
 function toScrivitoWidgets(obj, widgetsDescription) {
   if (!widgetsDescription) return undefined;
 
-  const prevWidgets = flatWidgets(obj);
+  const prevWidgets = flatWidgetsList(obj);
+  console.log(prevWidgets);
   const usedIds = [];
   const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {
     let existingWidget = prevWidgets.find((w) => w.nestedContent ? w.widget.id() === id : w.id() === id);

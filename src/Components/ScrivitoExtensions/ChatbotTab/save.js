@@ -57,13 +57,11 @@ export async function save(obj, widgetsDescription) {
             container = previousWidget.container();
           } // get the container if the previousWidget wasn't one
             widgetlistAttributeNames(container).forEach((name) => {
-              const widgetsContainerList = container.get(name.toString());
-              console.log("widgetsContainerList", widgetsContainerList);
-              widgetsContainerList.forEach((widgetContainer, index) => {
-                if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
-              })
-              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
-              console.log(widgetsContainerList);
+              const widgetsContainerList = container.get(name.toString()); // get the content of the container
+              if (!widgetsContainerList.includes(widget.widget)){ // check if the new widget is in the middle of existing widget
+                if (container.id() === previousWidget.id()) widgetsContainerList.splice(0, 0, widget.widget); // check if the widget is in the first position
+                if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.push(widget.widget); // else we add the widget at the end
+              }
               container.update({
                 content: [...widgetsContainerList]
               })
@@ -71,38 +69,6 @@ export async function save(obj, widgetsDescription) {
         }
       }
     });
-    // const newWidgets = [];
-    // const previousWidgets = [];
-    // let previousWidget = null;
-    // scrivitoWidgets.forEach(({ widget, modification }) => {
-    //   if (modification === 'new' && previousWidget !== null) {
-    //     newWidgets.push(widget);
-    //     previousWidgets.push(previousWidget);
-    //   }
-    //   if (modification === 'edit') previousWidget = widget;
-    // });
-    // // console.log("newWidgets", newWidgets);
-    // // console.log("previousWidgets", previousWidgets);
-    // previousWidgets.forEach((prevWidget, index) => {
-    //   console.log("prevWidget", prevWidget);
-    //   const clearContainer = prevWidget.container();
-    //   const newWidget = newWidgets[index];
-    //
-    //   const attributeName = clearContainer
-    //     ? containerAttributeName(clearContainer)
-    //     : "body";
-    //   // console.log("attributeName", attributeName);
-    //   console.log("clearContainer", clearContainer);
-    //   console.log("newWidget", newWidget);
-    //   widgetlistAttributeNames(clearContainer).forEach((name) => {
-    //     // console.log("widget name", clearContainer.get(name.toString()));
-    //     // console.log(clearContainer.attributeDefinitions());
-    //     // console.log(prevWidget.attributeDefinitions());
-    //     clearContainer.update({
-    //       content: [...clearContainer.get(name.toString()), newWidget]
-    //     })
-    //   });
-    // });
   }
   await obj.finishSaving();
 }

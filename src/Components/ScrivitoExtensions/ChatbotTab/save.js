@@ -56,8 +56,10 @@ export async function save(obj, widgetsDescription) {
 
         }else{
           const previousWidget = scrivitoWidgets[index-1].widget;
+          console.log("previousWidget", previousWidget);
           let container = previousWidget;
           if (widgetlistAttributeNames(previousWidget) === []) container = previousWidget.container(); // get the container if the previousWidget wasn't one
+          console.log("container", container);
             widgetlistAttributeNames(container).forEach((name) => {
               console.log(container.attributeDefinitions());
               container.update({

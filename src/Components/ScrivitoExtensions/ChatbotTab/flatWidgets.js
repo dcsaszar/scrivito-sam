@@ -16,3 +16,22 @@ export function flatWidgets(content) {
     });
   });
 }
+
+export function flatWidgetsList(content) {
+  const widgets = flatWidgets(content);
+  const flatWidgetsList = {};
+
+  function processWidgets(widgets) {
+    widgets.forEach((w) => {
+      if (w.nestedContent) {
+        flatWidgetsList[w.widget.objClass()] = w.widget;
+        processWidgets(w.nestedContent);
+      } else {
+        flatWidgetsList[w.objClass()] = w;
+      }
+    });
+  }
+
+  processWidgets(widgets);
+  return flatWidgetsList;
+}

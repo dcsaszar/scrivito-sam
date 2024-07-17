@@ -1,5 +1,5 @@
 import * as Scrivito from "scrivito";
-import { flatWidgets, flatWidgetsList } from "./flatWidgets.js";
+import { flatWidgets } from "./flatWidgets.js";
 
 export async function getWidgetsPrompt(obj) {
   const rootWidgets = await Scrivito.load(() =>
@@ -7,9 +7,19 @@ export async function getWidgetsPrompt(obj) {
   );
   const pageWidgets = await Scrivito.load(() => flatWidgetsList(obj));
   const widgets = {};
-  pageWidgets.concat(rootWidgets).forEach((w) => (widgets[w.objClass()] = w));
 
-  return Object.entries(pageWidgets)
+  function extractWidgets(w) {
+    if (w.nestedContent) {
+      widgets[w.widget.objClass()] = w.widget;
+      w.nestedContent.forEach(extractWidgets);
+    }else{
+      widgets[w.objClass()] = w;
+    }
+  }
+
+  pageWidgets.concat(rootWidgets).forEach(extractWidgets);
+
+  return Object.entries(widgets)
     .map(([className, widget]) => {
       const data = [];
       Object.entries(widget.attributeDefinitions()).forEach(

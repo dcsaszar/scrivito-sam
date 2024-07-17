@@ -19,7 +19,7 @@ export function flatWidgets(content) {
 
 export function flatWidgetsList(content) {
   const widgets = flatWidgets(content);
-  const flatWidgetsList = {};
+  const flatWidgetsList = [];
 
   function processWidgets(widgets) {
     widgets.forEach((w) => {

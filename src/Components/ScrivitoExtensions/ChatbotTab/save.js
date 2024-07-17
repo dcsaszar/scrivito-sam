@@ -82,19 +82,20 @@ export async function save(obj, widgetsDescription) {
     // console.log("newWidgets", newWidgets);
     // console.log("previousWidgets", previousWidgets);
     previousWidgets.forEach((prevWidget, index) => {
+      console.log("prevWidget", prevWidget);
       const clearContainer = prevWidget.container();
       const newWidget = newWidgets[index];
 
       const attributeName = clearContainer
         ? containerAttributeName(clearContainer)
         : "body";
-      console.log("attributeName", attributeName);
+      // console.log("attributeName", attributeName);
       console.log("clearContainer", clearContainer);
       console.log("newWidget", newWidget);
       widgetlistAttributeNames(clearContainer).forEach((name) => {
-        console.log("widget name", clearContainer.get(name.toString()));
-        console.log(clearContainer.attributeDefinitions());
-        console.log(prevWidget.attributeDefinitions());
+        // console.log("widget name", clearContainer.get(name.toString()));
+        // console.log(clearContainer.attributeDefinitions());
+        // console.log(prevWidget.attributeDefinitions());
         clearContainer.update({
           content: [...clearContainer.get(name.toString()), newWidget]
         })

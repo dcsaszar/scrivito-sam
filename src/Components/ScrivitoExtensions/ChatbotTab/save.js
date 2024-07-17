@@ -63,7 +63,7 @@ export async function save(obj, widgetsDescription) {
             widgetlistAttributeNames(container).forEach((name) => {
               console.log(container.attributeDefinitions());
               container.update({
-                content: [...container.get(name.toString()), widget]
+                content: [...container.get(name.toString()), widget.widget]
               })
             });
         }

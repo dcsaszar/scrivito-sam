@@ -76,6 +76,9 @@ export async function save(obj, widgetsDescription) {
       const clearContainer = prevWidget.container();
       const newWidget = newWidgets[index];
 
+      console.log("prevWidget", prevWidget);
+      console.log("clearContainer", clearContainer);
+      console.log("newWidget", newWidget);
       // Met à jour le container avec le nouveau widget
       widgetlistAttributeNames(clearContainer).forEach((name) => {
         clearContainer.update({
@@ -89,8 +92,8 @@ export async function save(obj, widgetsDescription) {
         [attributeName]: [...clearContainer.get(attributeName), newWidget]
       });
     });
-    // console.log("container", container);
-    // container.update({ [attributeName]: newWidgets });
+    console.log("container", container);
+    container.update({ [attributeName]: newWidgets })
   }
 
   // scrivitoWidgets.forEach(({ widget, attributes }) => // pertinent?

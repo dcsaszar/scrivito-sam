@@ -171,10 +171,10 @@ function toScrivitoWidgets(obj, widgetsDescription) {
 
   function extractWidgets(w) {
     if (w.nestedContent) {
-      prevWidgets[w.widget.objClass()] = w.widget;
+      prevWidgets.push(w.widget);
       w.nestedContent.forEach(extractWidgets);
     }else{
-      prevWidgets[w.objClass()] = w;
+      prevWidgets.push(w);
     }
   }
   widgetsList.forEach(extractWidgets)

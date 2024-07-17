@@ -48,9 +48,9 @@ export async function save(obj, widgetsDescription) {
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join();
   console.log("isUpdateOnly", isUpdateOnly);
   if (!isUpdateOnly) {
-    scrivitoWidgets.forEach((widget, index, modification) => {
-      console.log("widget", widget);
-      if (modification === 'new'){ // add only new widget
+    scrivitoWidgets.forEach((widget, index) => {
+      console.log("widget", widget, index);
+      if (widget.modification === 'new'){ // add only new widget
         console.log(widget.objClass());
         if (widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
 

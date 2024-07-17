@@ -49,7 +49,6 @@ export async function save(obj, widgetsDescription) {
   console.log("isUpdateOnly", isUpdateOnly);
   if (!isUpdateOnly) {
     scrivitoWidgets.forEach((widget, index) => {
-      console.log("widget", widget, index);
       if (widget.modification === 'new'){ // add only new widget
         console.log(widget.widget.objClass());
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
@@ -65,7 +64,7 @@ export async function save(obj, widgetsDescription) {
           } // get the container if the previousWidget wasn't one
           console.log("container", container);
             widgetlistAttributeNames(container).forEach((name) => {
-              console.log(container.attributeDefinitions());
+              console.log(container.get(name.toString()));
               container.update({
                 content: [...container.get(name.toString()), widget.widget]
               })

@@ -37,8 +37,7 @@ export async function save(obj, widgetsDescription) {
 
   deleteWidgets.forEach(({ widget }) => {
     const widgetToDelete = obj.widgets().find((w) => w.id() === widget.id());
-    console.log(widgetToDelete);
-    widgetToDelete.delete()
+    if (widgetToDelete) widgetToDelete.delete()
   });
 
   const hasNewWidgets = scrivitoWidgets.some(

@@ -83,6 +83,7 @@ export async function save(obj, widgetsDescription) {
       console.log("newWidget", newWidget);
       widgetlistAttributeNames(clearContainer).forEach((name) => {
         console.log("widget name", clearContainer.get(name.toString()));
+        console.log(clearContainer.attributeDefinitions());
         clearContainer.update({
           [attributeName]: [...clearContainer.get(name.toString()), newWidget]
         })

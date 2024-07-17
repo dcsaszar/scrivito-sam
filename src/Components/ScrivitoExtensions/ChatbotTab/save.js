@@ -46,15 +46,15 @@ export async function save(obj, widgetsDescription) {
   const isUpdateOnly =
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join(); //pertinent?
   if (!isUpdateOnly) {
-    const firstPrevWidget = prevWidgets[0];
-    const container = firstPrevWidget?.container() || obj;
-    const preferredAttributeName = firstPrevWidget
-      ? containerAttributeName(firstPrevWidget)
-      : "body";
-    const attributeName =
-      widgetlistAttributeNames(container).find(
-        (name) => name === preferredAttributeName
-      ) || widgetlistAttributeNames(container)[0];
+    // const firstPrevWidget = prevWidgets[0];
+    // const container = firstPrevWidget?.container() || obj;
+    // const preferredAttributeName = firstPrevWidget
+    //   ? containerAttributeName(firstPrevWidget)
+    //   : "body";
+    // const attributeName =
+    //   widgetlistAttributeNames(container).find(
+    //     (name) => name === preferredAttributeName
+    //   ) || widgetlistAttributeNames(container)[0];
 
     const newWidgets = [];
     const previousWidgets = [];
@@ -75,13 +75,16 @@ export async function save(obj, widgetsDescription) {
       const clearContainer = prevWidget.container();
       const newWidget = newWidgets[index];
 
-      console.log("prevWidget", prevWidget);
+      const attributeName = clearContainer
+        ? containerAttributeName(clearContainer)
+        : "body";
+      console.log("attributeName", attributeName);
       console.log("clearContainer", clearContainer);
       console.log("newWidget", newWidget);
       widgetlistAttributeNames(clearContainer).forEach((name) => {
-        console.log(clearContainer.get(name.toString()));
+        console.log("widget name", clearContainer.get(name.toString()));
         clearContainer.update({
-          body: [...clearContainer.get(name.toString()), newWidget]
+          [attributeName]: [...clearContainer.get(name.toString()), newWidget]
         })
       });
     });

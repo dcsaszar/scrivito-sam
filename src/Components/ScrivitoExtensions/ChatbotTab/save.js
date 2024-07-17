@@ -37,6 +37,7 @@ export async function save(obj, widgetsDescription) {
 
   deleteWidgets.forEach(({ widget }) => {
     const widgetToDelete = obj.widgets().find((w) => w.id() === widget.id());
+    console.log(widgetToDelete);
     widgetToDelete.delete()
   });
 
@@ -167,8 +168,6 @@ function cleanUp(rawValue, attributeType) {
 function toScrivitoWidgets(obj, widgetsDescription) {
   if (!widgetsDescription) return undefined;
   const prevWidgets = flatWidgetsList(obj);
-
-  console.log(prevWidgets);
   const usedIds = [];
   const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {
     let existingWidget = prevWidgets.find((w) => w.id() === id);

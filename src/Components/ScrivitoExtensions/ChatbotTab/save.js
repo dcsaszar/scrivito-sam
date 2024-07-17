@@ -57,12 +57,12 @@ export async function save(obj, widgetsDescription) {
             container = previousWidget.container();
           } // get the container if the previousWidget wasn't one
             widgetlistAttributeNames(container).forEach((name) => {
-              const widgetsContainerList = container.get(name.toString()); // get the content of the container
-              console.log(widgetsContainerList);
-              if (!widgetsContainerList.includes(widget.widget)){ // check if the new widget is in the middle of existing widget
-                if (container.id() === previousWidget.id()) widgetsContainerList.splice(0, 0, widget.widget); // check if the widget is in the first position
-                if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.push(widget.widget); // else we add the widget at the end
-              }
+              const widgetsContainerList = container.get(name.toString());
+              console.log("widgetsContainerList", widgetsContainerList);
+              widgetsContainerList.forEach((widgetContainer, index) => {
+                if (widgetContainer.id() && widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+              })
+              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
               console.log(widgetsContainerList);
               container.update({
                 content: [...widgetsContainerList]

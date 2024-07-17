@@ -11,7 +11,6 @@ export function canBeSaved(obj, widgetsDescription) {
 export async function save(obj, widgetsDescription) {
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
   console.log("widgetsDescription", widgetsDescription);
-  console.log("scrivitoWidgets", scrivitoWidgets);
   const prevWidgets = flatWidgetsList(obj);
 
   const widgetIds = scrivitoWidgets
@@ -46,22 +45,20 @@ export async function save(obj, widgetsDescription) {
   );
   const isUpdateOnly =
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join();
-  console.log("isUpdateOnly", isUpdateOnly);
   if (!isUpdateOnly) {
     scrivitoWidgets.forEach((widget, index) => {
       if (widget.modification === 'new'){ // add only new widget
-        console.log(widget.widget.objClass());
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
 
         }else{
           const previousWidget = scrivitoWidgets[index-1].widget;
           let container = previousWidget;
-          console.log(widgetlistAttributeNames(previousWidget).length);
           if (widgetlistAttributeNames(previousWidget).length === 0) {
             container = previousWidget.container();
           } // get the container if the previousWidget wasn't one
             widgetlistAttributeNames(container).forEach((name) => {
               const widgetsContainerList = container.get(name.toString());
+              console.log("widgetsContainerList", widgetsContainerList);
               widgetsContainerList.forEach((widgetContainer, index) => {
                 if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
               })

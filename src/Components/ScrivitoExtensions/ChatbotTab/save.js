@@ -68,7 +68,6 @@ export async function save(obj, widgetsDescription) {
       if (modification === 'edit') previousWidget = widget;
     });
 
-     //TODO: implement the new widget for that we need to add the widget section and column to the widget prompt to have a hierarchy
     // console.log("newWidgets", newWidgets);
     // console.log("previousWidgets", previousWidgets);
 
@@ -80,26 +79,11 @@ export async function save(obj, widgetsDescription) {
       console.log("clearContainer", clearContainer);
       console.log("newWidget", newWidget);
       // Met à jour le container avec le nouveau widget
-      widgetlistAttributeNames(clearContainer).forEach((name) => {
-        console.log(clearContainer.get(name.toString()));
-        // clearContainer.update({
-        //   [name]: clearContainer
-        //     .get(name)
-        //     .filter((widget) => widget.id() !== prevWidget.id())
-        // });
-      });
-
-      // clearContainer.update({
-      //   [attributeName]: [...clearContainer.get(attributeName), newWidget]
-      // });
+      clearContainer.update({
+        body: [...clearContainer.get("body"), newWidget]
+      })
     });
-    console.log("container", container);
-    container.update({ [attributeName]: newWidgets })
   }
-
-  // scrivitoWidgets.forEach(({ widget, attributes }) => // pertinent?
-  //   updateAttributes(widget, attributes)
-  // );
   await obj.finishSaving();
 }
 

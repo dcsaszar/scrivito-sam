@@ -75,10 +75,6 @@ export async function save(obj, widgetsDescription) {
       const clearContainer = prevWidget.container();
       const newWidget = newWidgets[index];
 
-      const attributeName = clearContainer
-        ? containerAttributeName(clearContainer)
-        : "body";
-      console.log("attributeName", attributeName);
       console.log("clearContainer", clearContainer);
       console.log("newWidget", newWidget);
       widgetlistAttributeNames(clearContainer).forEach((name) => {

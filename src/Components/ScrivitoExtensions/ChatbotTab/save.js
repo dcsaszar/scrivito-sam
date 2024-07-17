@@ -167,7 +167,7 @@ function cleanUp(rawValue, attributeType) {
 function toScrivitoWidgets(obj, widgetsDescription) {
   if (!widgetsDescription) return undefined;
 
-  const prevWidgets = flatWidgetsList(obj);
+  const prevWidgets = flatWidgets(obj);
   console.log(prevWidgets);
   const usedIds = [];
   const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {

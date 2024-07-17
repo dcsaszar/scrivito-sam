@@ -59,7 +59,10 @@ export async function save(obj, widgetsDescription) {
           console.log("previousWidget", previousWidget);
           let container = previousWidget;
           console.log(widgetlistAttributeNames(previousWidget));
-          if (widgetlistAttributeNames(previousWidget) === []) container = previousWidget.container(); // get the container if the previousWidget wasn't one
+          if (widgetlistAttributeNames(previousWidget).length) {
+            console.log(container);
+            container = previousWidget.container();
+          } // get the container if the previousWidget wasn't one
           console.log("container", container);
             widgetlistAttributeNames(container).forEach((name) => {
               console.log(container.attributeDefinitions());

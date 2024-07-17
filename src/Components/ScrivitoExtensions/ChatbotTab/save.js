@@ -78,10 +78,12 @@ export async function save(obj, widgetsDescription) {
       console.log("prevWidget", prevWidget);
       console.log("clearContainer", clearContainer);
       console.log("newWidget", newWidget);
-      // Met à jour le container avec le nouveau widget
-      clearContainer.update({
-        body: [...clearContainer.get("body"), newWidget]
-      })
+      widgetlistAttributeNames(clearContainer).forEach((name) => {
+        console.log(clearContainer.get(name.toString()));
+        clearContainer.update({
+          body: [...clearContainer.get(name.toString()), newWidget]
+        })
+      });
     });
   }
   await obj.finishSaving();

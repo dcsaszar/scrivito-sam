@@ -62,15 +62,15 @@ export async function save(obj, widgetsDescription) {
           } // get the container if the previousWidget wasn't one
             widgetlistAttributeNames(container).forEach((name) => {
               const widgetsContainerList = container.get(name.toString());
+              widgetsContainerList.splice(0, 0, widget.widget);
               widgetsContainerList.forEach((widgetContainer, index) => {
                 if (widgetContainer.id() === previousWidget.id()) {
-                  widgetsContainerList.splice(index + 1, 0, widget);
+                  widgetsContainerList.splice(index + 1, 0, widget.widget);
                   console.log(widgetsContainerList);
                   return;
                 }
-                widgetsContainerList.splice(0, 0, widget);
-                console.log(widgetsContainerList);
               })
+              console.log(widgetsContainerList);
               container.update({
                 content: [...widgetsContainerList]
               })

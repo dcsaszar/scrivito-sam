@@ -24,10 +24,10 @@ export function flatWidgetsList(content) {
   function processWidgets(widgets) {
     widgets.forEach((w) => {
       if (w.nestedContent) {
-        flatWidgetsList[w.widget.objClass()] = w.widget;
+        flatWidgetsList.push(w.widget);
         processWidgets(w.nestedContent);
       } else {
-        flatWidgetsList[w.objClass()] = w;
+        flatWidgetsList.push(w);
       }
     });
   }

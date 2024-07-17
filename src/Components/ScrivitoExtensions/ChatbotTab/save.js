@@ -1,6 +1,6 @@
 import * as Scrivito from "scrivito";
 
-import { flatWidgets, flatWidgetsList } from "./flatWidgets.js";
+import { flatWidgetsList } from "./flatWidgets.js";
 import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 
@@ -12,7 +12,7 @@ export async function save(obj, widgetsDescription) {
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
   console.log("widgetsDescription", widgetsDescription);
   console.log("scrivitoWidgets", scrivitoWidgets);
-  const prevWidgets = flatWidgets(obj);
+  const prevWidgets = flatWidgetsList(obj);
 
   const widgetIds = scrivitoWidgets
     .map(({ widgetId }) => widgetId)
@@ -166,24 +166,12 @@ function cleanUp(rawValue, attributeType) {
 
 function toScrivitoWidgets(obj, widgetsDescription) {
   if (!widgetsDescription) return undefined;
-  const widgetsList = flatWidgets(obj);
-  const prevWidgets = [];
-
-  function extractWidgets(w) {
-    if (w.nestedContent) {
-      prevWidgets.push(w.widget);
-      w.nestedContent.forEach(extractWidgets);
-    }else{
-      prevWidgets.push(w);
-    }
-  }
-  widgetsList.forEach(extractWidgets)
+  const prevWidgets = flatWidgetsList(obj);
 
   console.log(prevWidgets);
   const usedIds = [];
   const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {
-    let existingWidget = prevWidgets.find((w) => w.nestedContent ? w.widget.id() === id : w.id() === id);
-    if (existingWidget) existingWidget = existingWidget.nestedContent ? existingWidget.widget : existingWidget
+    let existingWidget = prevWidgets.find((w) => w.id() === id);
     if (existingWidget && existingWidget.objClass() === objClass && !usedIds.includes(id)) {
       usedIds.push(id);
       return {

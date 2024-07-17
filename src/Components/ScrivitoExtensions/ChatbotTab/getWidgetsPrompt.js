@@ -1,25 +1,15 @@
 import * as Scrivito from "scrivito";
-import { flatWidgets } from "./flatWidgets.js";
+import { flatWidgets, flatWidgetsList } from "./flatWidgets.js";
 
 export async function getWidgetsPrompt(obj) {
   const rootWidgets = await Scrivito.load(() =>
     flatWidgets(Scrivito.Obj.root())
   );
-  const pageWidgets = await Scrivito.load(() => flatWidgets(obj));
+  const pageWidgets = await Scrivito.load(() => flatWidgetsList(obj));
   const widgets = {};
+  pageWidgets.concat(rootWidgets).forEach((w) => (widgets[w.objClass()] = w));
 
-  function extractWidgets(w) {
-    if (w.nestedContent) {
-      widgets[w.widget.objClass()] = w.widget;
-      w.nestedContent.forEach(extractWidgets);
-    }else{
-      widgets[w.objClass()] = w;
-    }
-  }
-
-  pageWidgets.concat(rootWidgets).forEach(extractWidgets);
-
-  return Object.entries(widgets)
+  return Object.entries(pageWidgets)
     .map(([className, widget]) => {
       const data = [];
       Object.entries(widget.attributeDefinitions()).forEach(

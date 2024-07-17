@@ -65,7 +65,7 @@ export async function save(obj, widgetsDescription) {
               widgetsContainerList.forEach((widgetContainer, index) => {
                 if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
               })
-              if (!widgetsContainerList.contains(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
               console.log(widgetsContainerList);
               container.update({
                 content: [...widgetsContainerList]

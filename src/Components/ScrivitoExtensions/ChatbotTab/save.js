@@ -55,18 +55,24 @@ export async function save(obj, widgetsDescription) {
 
         }else{
           const previousWidget = scrivitoWidgets[index-1].widget;
-          console.log("previousWidget", previousWidget);
           let container = previousWidget;
           console.log(widgetlistAttributeNames(previousWidget).length);
           if (widgetlistAttributeNames(previousWidget).length === 0) {
-            console.log("previous container", container);
             container = previousWidget.container();
           } // get the container if the previousWidget wasn't one
-          console.log("container", container);
             widgetlistAttributeNames(container).forEach((name) => {
-              console.log(container.get(name.toString()));
+              const widgetsContainerList = container.get(name.toString());
+              widgetsContainerList.forEach((widgetContainer, index) => {
+                if (widgetContainer.id() === previousWidget.id()) {
+                  widgetsContainerList.splice(index + 1, 0, widget);
+                  console.log(widgetsContainerList);
+                  return;
+                }
+                widgetsContainerList.splice(0, 0, widget);
+                console.log(widgetsContainerList);
+              })
               container.update({
-                content: [...container.get(name.toString()), widget.widget]
+                content: [...widgetsContainerList]
               })
             });
         }

@@ -166,8 +166,19 @@ function cleanUp(rawValue, attributeType) {
 
 function toScrivitoWidgets(obj, widgetsDescription) {
   if (!widgetsDescription) return undefined;
+  const widgetsList = flatWidgets(obj);
+  const prevWidgets = [];
 
-  const prevWidgets = flatWidgets(obj);
+  function extractWidgets(w) {
+    if (w.nestedContent) {
+      prevWidgets[w.widget.objClass()] = w.widget;
+      w.nestedContent.forEach(extractWidgets);
+    }else{
+      prevWidgets[w.objClass()] = w;
+    }
+  }
+  widgetsList.forEach(extractWidgets)
+
   console.log(prevWidgets);
   const usedIds = [];
   const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {

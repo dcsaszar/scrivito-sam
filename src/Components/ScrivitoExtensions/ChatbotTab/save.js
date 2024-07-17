@@ -59,9 +59,12 @@ export async function save(obj, widgetsDescription) {
             widgetlistAttributeNames(container).forEach((name) => {
               const widgetsContainerList = container.get(name.toString());
               console.log("widgetsContainerList", widgetsContainerList);
-              console.log(widgetsContainerList.includes(widget.widget));
               widgetsContainerList.forEach((widgetContainer, index) => {
-                if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+                try {
+                  if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+                }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+                  widgetsContainerList.splice(index + 1, 0, widget.widget);
+                }
               })
               if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
               console.log(widgetsContainerList);

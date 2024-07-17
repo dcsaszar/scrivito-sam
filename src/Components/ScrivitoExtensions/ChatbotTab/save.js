@@ -63,7 +63,7 @@ export async function save(obj, widgetsDescription) {
                 try {
                   if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
                 }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
-                  widgetsContainerList.splice(index + 1, 0, widget.widget);
+                  widgetsContainerList[index] = widget.widget;
                 }
               })
               if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);

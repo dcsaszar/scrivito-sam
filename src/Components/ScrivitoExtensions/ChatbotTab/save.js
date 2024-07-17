@@ -51,11 +51,11 @@ export async function save(obj, widgetsDescription) {
     scrivitoWidgets.forEach((widget, index) => {
       console.log("widget", widget, index);
       if (widget.modification === 'new'){ // add only new widget
-        console.log(widget.objClass());
-        if (widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
+        console.log(widget.widget.objClass());
+        if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
 
         }else{
-          const previousWidget = scrivitoWidgets[index-1];
+          const previousWidget = scrivitoWidgets[index-1].widget;
           let container = previousWidget;
           if (widgetlistAttributeNames(previousWidget) === []) container = previousWidget.container(); // get the container if the previousWidget wasn't one
             widgetlistAttributeNames(container).forEach((name) => {

@@ -54,9 +54,10 @@ export async function save(obj, widgetsDescription) {
           let containerKeyword = "content"
           const previousWidget = scrivitoWidgets[index-1].widget;
           let container = previousWidget;
-          if (widgetlistAttributeNames(previousWidget).length === 0) {
-            container = previousWidget.container();
-          } // get the container if the previousWidget wasn't one
+          // get the container if the previousWidget wasn't one
+          if (widgetlistAttributeNames(previousWidget).length === 0) container = previousWidget.container();
+          //Special Case for Column Widget
+          if (widget.widget.objClass() === "ColumnWidget" && container.objClass() === "ColumnWidget") container = container.container()
             widgetlistAttributeNames(container).forEach((name) => {
               const widgetsContainerList = container.get(name.toString());
               widgetsContainerList.forEach((widgetContainer, index) => {

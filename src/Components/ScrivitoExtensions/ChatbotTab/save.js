@@ -51,6 +51,7 @@ export async function save(obj, widgetsDescription) {
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
 
         }else{
+          updateAttributes(widget.widget, widget.attributes)
           const previousWidget = scrivitoWidgets[index-1].widget;
           let container = previousWidget;
           if (widgetlistAttributeNames(previousWidget).length === 0) {
@@ -59,7 +60,6 @@ export async function save(obj, widgetsDescription) {
             widgetlistAttributeNames(container).forEach((name) => {
               const widgetsContainerList = container.get(name.toString());
               widgetsContainerList.forEach((widgetContainer, index) => {
-                console.log(widget);
                 try {
                   if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
                 }catch (e){ //when widget is in the middle we iterate on it but id() throw an error

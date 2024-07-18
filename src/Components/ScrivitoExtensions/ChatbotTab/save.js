@@ -67,6 +67,7 @@ export async function save(obj, widgetsDescription) {
                 }
               })
               if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+              console.log(widget);
               console.log(container.attributeDefinitions());
               if (container.objClass() === "ColumnContainerWidget") containerKeyword = "columns"
               container.update({

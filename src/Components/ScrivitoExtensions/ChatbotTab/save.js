@@ -46,12 +46,12 @@ export async function save(obj, widgetsDescription) {
   const isUpdateOnly =
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join();
   if (!isUpdateOnly) {
-    let containerKeyword = "content"
     scrivitoWidgets.forEach((widget, index) => {
       if (widget.modification === 'new'){ // add only new widget
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
 
         }else{
+          let containerKeyword = "content"
           const previousWidget = scrivitoWidgets[index-1].widget;
           let container = previousWidget;
           if (widgetlistAttributeNames(previousWidget).length === 0) {

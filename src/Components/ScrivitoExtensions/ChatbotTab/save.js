@@ -51,7 +51,6 @@ export async function save(obj, widgetsDescription) {
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
 
         }else{
-          updateAttributes(widget.widget, widget.attributes)
           const previousWidget = scrivitoWidgets[index-1].widget;
           let container = previousWidget;
           if (widgetlistAttributeNames(previousWidget).length === 0) {
@@ -71,6 +70,7 @@ export async function save(obj, widgetsDescription) {
                 content: [...widgetsContainerList]
               })
             });
+          updateAttributes(widget.widget, widget.attributes)
         }
       }
     });

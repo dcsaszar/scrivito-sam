@@ -58,8 +58,8 @@ export async function save(obj, widgetsDescription) {
           } // get the container if the previousWidget wasn't one
             widgetlistAttributeNames(container).forEach((name) => {
               const widgetsContainerList = container.get(name.toString());
-              console.log("widgetsContainerList", widgetsContainerList);
               widgetsContainerList.forEach((widgetContainer, index) => {
+                console.log(widget.widget);
                 try {
                   if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
                 }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
@@ -67,7 +67,6 @@ export async function save(obj, widgetsDescription) {
                 }
               })
               if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
-              console.log(widgetsContainerList);
               container.update({
                 content: [...widgetsContainerList]
               })

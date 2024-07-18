@@ -46,6 +46,7 @@ export async function save(obj, widgetsDescription) {
   const isUpdateOnly =
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join();
   if (!isUpdateOnly) {
+    let containerKeyword = "content"
     scrivitoWidgets.forEach((widget, index) => {
       if (widget.modification === 'new'){ // add only new widget
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
@@ -66,6 +67,8 @@ export async function save(obj, widgetsDescription) {
                 }
               })
               if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+              console.log(container);
+              if (widget.widget.objClass() === "ColumnContainerWidget") containerKeyword = "body"
               container.update({
                 content: [...widgetsContainerList]
               })

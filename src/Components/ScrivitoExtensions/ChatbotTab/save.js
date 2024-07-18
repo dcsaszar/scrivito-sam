@@ -59,7 +59,7 @@ export async function save(obj, widgetsDescription) {
             widgetlistAttributeNames(container).forEach((name) => {
               const widgetsContainerList = container.get(name.toString());
               widgetsContainerList.forEach((widgetContainer, index) => {
-                console.log(widget.widget);
+                console.log(widget);
                 try {
                   if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
                 }catch (e){ //when widget is in the middle we iterate on it but id() throw an error

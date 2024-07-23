@@ -49,7 +49,10 @@ export async function save(obj, widgetsDescription) {
     scrivitoWidgets.forEach((widget, index) => {
       if (widget.modification === 'new'){ // add only new widget
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
-
+          console.log("widget", widget);
+          console.log("previous widget", scrivitoWidgets[index-1].widget);
+          console.log("previous container", scrivitoWidgets[index-1].widget.container());
+          console.log("previous x2 container", scrivitoWidgets[index-1].widget.container().container());
         }else{
           let containerKeyword = "content"
           const previousWidget = scrivitoWidgets[index-1].widget;
@@ -58,23 +61,21 @@ export async function save(obj, widgetsDescription) {
           if (widgetlistAttributeNames(previousWidget).length === 0) container = previousWidget.container();
           //Special Case for Column Widget
           if (widget.widget.objClass() === "ColumnWidget" && container.objClass() === "ColumnWidget") container = container.container()
-            widgetlistAttributeNames(container).forEach((name) => {
-              const widgetsContainerList = container.get(name.toString());
-              widgetsContainerList.forEach((widgetContainer, index) => {
-                try {
-                  if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
-                }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
-                  widgetsContainerList[index] = widget.widget;
-                }
-              })
-              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
-              console.log(widget);
-              console.log(container.attributeDefinitions());
-              if (container.objClass() === "ColumnContainerWidget") containerKeyword = "columns"
-              container.update({
-                [containerKeyword]: [...widgetsContainerList]
-              })
-            });
+          widgetlistAttributeNames(container).forEach((name) => {
+            const widgetsContainerList = container.get(name.toString());
+            widgetsContainerList.forEach((widgetContainer, index) => {
+              try {
+                if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+              }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+                widgetsContainerList[index] = widget.widget;
+              }
+            })
+            if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+            if (container.objClass() === "ColumnContainerWidget") containerKeyword = "columns"
+            container.update({
+              [containerKeyword]: [...widgetsContainerList]
+            })
+          });
           updateAttributes(widget.widget, widget.attributes)
         }
       }

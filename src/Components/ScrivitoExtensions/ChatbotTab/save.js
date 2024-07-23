@@ -50,9 +50,24 @@ export async function save(obj, widgetsDescription) {
       if (widget.modification === 'new'){ // add only new widget
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
           console.log("widget", widget);
-          console.log("previous widget", scrivitoWidgets[index-1].widget);
-          console.log("previous container", scrivitoWidgets[index-1].widget.container());
-          console.log("previous x2 container", scrivitoWidgets[index-1].widget.container().container());
+          console.log("previous widget", scrivitoWidgets[0].widget); // Not fantastic b/c we suppose there is always a section widget at the 1st position
+          console.log("previous container", scrivitoWidgets[0].widget.container());
+          const container = scrivitoWidgets[0].widget.container();
+          widgetlistAttributeNames(container).forEach((name) => {
+            const widgetsContainerList = container.get(name.toString());
+            widgetsContainerList.forEach((widgetContainer, index) => {
+            //   try {
+            //     if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+            //   }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+            //     widgetsContainerList[index] = widget.widget;
+            //   }
+            // })
+            if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+            container.update({
+              body: [...widgetsContainerList]
+            })
+          });
+          updateAttributes(widget.widget, widget.attributes)
         }else{
           let containerKeyword = "content"
           const previousWidget = scrivitoWidgets[index-1].widget;

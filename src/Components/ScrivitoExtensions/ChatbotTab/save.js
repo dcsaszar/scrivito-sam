@@ -57,7 +57,7 @@ export async function save(obj, widgetsDescription) {
           console.log("sectionWidgets", sectionWidgets);
           const orderMap = new Map();
           sectionWidgets.forEach((value, index) => {
-            orderMap.set(value, index);
+            orderMap.set(value.widget, index);
           });
           console.log("orderMap", orderMap);
 
@@ -66,14 +66,14 @@ export async function save(obj, widgetsDescription) {
             const widgetsContainerList = container.get(name.toString());
             widgetsContainerList.sort((a, b) => orderMap.get(a) - orderMap.get(b));
             console.log(widgetsContainerList);
-            widgetsContainerList.forEach((widgetContainer, index) => {
-                try {
-                  if (widgetContainer.id() === 0) widgetsContainerList.splice(index + 1, 0, widget.widget);
-                }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
-                  widgetsContainerList[index] = widget.widget;
-                }
-              })
-              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+            // widgetsContainerList.forEach((widgetContainer, index) => {
+            //     try {
+            //       if (widgetContainer.id() === 0) widgetsContainerList.splice(index + 1, 0, widget.widget);
+            //     }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+            //       widgetsContainerList[index] = widget.widget;
+            //     }
+            //   })
+            //   if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
               container.update({
                 body: [...widgetsContainerList]
               })

@@ -57,7 +57,7 @@ export async function save(obj, widgetsDescription) {
           console.log("sectionWidgets", sectionWidgets);
           const orderMap = new Map();
           sectionWidgets.forEach((value, index) => {
-            orderMap.set(value.widget.id(), index);
+            orderMap.set(value.widget, index);
           });
           console.log("orderMap", orderMap);
 
@@ -66,7 +66,7 @@ export async function save(obj, widgetsDescription) {
             const widgetsContainerList = container.get(name.toString());
             widgetsContainerList.push(widget.widget)
             console.log(widgetsContainerList);
-            widgetsContainerList.sort((a, b) => orderMap.get(a.id()) - orderMap.get(b.id()));
+            widgetsContainerList.sort((a, b) => orderMap.get(a) - orderMap.get(b));
             console.log(widgetsContainerList);
             // widgetsContainerList.forEach((widgetContainer, index) => {
             //     try {

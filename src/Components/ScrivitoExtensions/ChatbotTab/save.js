@@ -57,16 +57,16 @@ export async function save(obj, widgetsDescription) {
           console.log("sectionWidgets", sectionWidgets);
           const orderMap = new Map();
           sectionWidgets.forEach((value, index) => {
-            orderMap.set(value.widget, index);
+            orderMap.set(value.widget.id(), index);
           });
-          //console.log("orderMap", orderMap);
+          console.log("orderMap", orderMap);
 
           const container = scrivitoWidgets[0].widget.container();
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
             widgetsContainerList.push(widget.widget)
             console.log(widgetsContainerList);
-            widgetsContainerList.sort((a, b) => orderMap.get(a) - orderMap.get(b));
+            widgetsContainerList.sort((a, b) => orderMap.get(a.id()) - orderMap.get(b.id()));
             console.log(widgetsContainerList);
             // widgetsContainerList.forEach((widgetContainer, index) => {
             //     try {

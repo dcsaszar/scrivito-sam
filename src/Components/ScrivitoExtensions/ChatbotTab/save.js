@@ -56,18 +56,18 @@ export async function save(obj, widgetsDescription) {
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
             widgetsContainerList.forEach((widgetContainer, index) => {
-            //   try {
-            //     if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
-            //   }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
-            //     widgetsContainerList[index] = widget.widget;
-            //   }
-            // })
-            if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
-            container.update({
-              body: [...widgetsContainerList]
-            })
-          });
-          updateAttributes(widget.widget, widget.attributes)
+              //   try {
+              //     if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+              //   }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+              //     widgetsContainerList[index] = widget.widget;
+              //   }
+              })
+              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+              container.update({
+                body: [...widgetsContainerList]
+              })
+            });
+            updateAttributes(widget.widget, widget.attributes);
         }else{
           let containerKeyword = "content"
           const previousWidget = scrivitoWidgets[index-1].widget;

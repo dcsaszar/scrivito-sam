@@ -59,11 +59,13 @@ export async function save(obj, widgetsDescription) {
           sectionWidgets.forEach((value, index) => {
             orderMap.set(value.widget, index);
           });
-          console.log("orderMap", orderMap);
+          //console.log("orderMap", orderMap);
 
           const container = scrivitoWidgets[0].widget.container();
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
+            widgetsContainerList.push(widget.widget)
+            console.log(widgetsContainerList);
             widgetsContainerList.sort((a, b) => orderMap.get(a) - orderMap.get(b));
             console.log(widgetsContainerList);
             // widgetsContainerList.forEach((widgetContainer, index) => {

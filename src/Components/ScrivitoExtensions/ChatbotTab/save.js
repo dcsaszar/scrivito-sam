@@ -55,27 +55,23 @@ export async function save(obj, widgetsDescription) {
               widget.objClass() === "SectionWidget"
           );
           console.log("sectionWidgets", sectionWidgets);
-          const orderMap = new Map();
-          sectionWidgets.forEach((value, index) => {
-            orderMap.set(value.widget.id() ? value.widget.id() : "newObject" , index);
-          });
-          console.log("orderMap", orderMap);
-
+          let previousWidget;
+          sectionWidgets.forEach((widgetSections, modification, index) => {
+            if (modification === "new" && widgetSections === widget.widget) previousWidget = sectionWidgets[index-1]
+          })
+          console.log(previousWidget);
           const container = scrivitoWidgets[0].widget.container();
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
-            widgetsContainerList.push(widget.widget)
             console.log(widgetsContainerList);
-            widgetsContainerList.sort((a, b) => orderMap.get(a.id() ? a.id() : "newObject") - orderMap.get(b.id() ? b.id() : "newObject"));
-            console.log(widgetsContainerList);
-            // widgetsContainerList.forEach((widgetContainer, index) => {
-            //     try {
-            //       if (widgetContainer.id() === 0) widgetsContainerList.splice(index + 1, 0, widget.widget);
-            //     }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
-            //       widgetsContainerList[index] = widget.widget;
-            //     }
-            //   })
-            //   if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+            widgetsContainerList.forEach((widgetContainer, index) => {
+                try {
+                  if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+                }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+                  widgetsContainerList[index] = widget.widget;
+                }
+              })
+              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
               container.update({
                 body: [...widgetsContainerList]
               })

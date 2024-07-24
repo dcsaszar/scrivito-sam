@@ -57,18 +57,19 @@ export async function save(obj, widgetsDescription) {
           console.log("sectionWidgets", sectionWidgets);
           let previousWidget;
           sectionWidgets.forEach((widgetSections, modification, index) => {
-            console.log(widgetSections, modification, index);
+            console.log("widgetSections", widgetSections);
+            console.log("modification", modification);
             if (modification === "new" && widgetSections === widget.widget) previousWidget = sectionWidgets[index-1]
           })
-          console.log(previousWidget);
+          console.log("previousWidget", previousWidget);
           const container = scrivitoWidgets[0].widget.container();
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
-            console.log(widgetsContainerList);
+            console.log("widgetsContainerList", widgetsContainerList);
             widgetsContainerList.forEach((widgetContainer, index) => {
                 try {
-                  console.log(widgetContainer, widgetContainer.id());
-                  console.log(previousWidget, previousWidget.id());
+                  console.log("widgetContainer", widgetContainer.id());
+                  console.log("previousWidget", previousWidget.id());
                   if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
                 }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
                   widgetsContainerList[index] = widget.widget;

@@ -10,8 +10,9 @@ export const prompts = {
 
 * HTML is structured as widgets.
 * Widgets are child elements of <html>.
+* <html> should have at least one <SectionWidget> with his child widgets.
 * Each widget is represented by <widget type="...">.
-* Widget types type="HeadlineWidget", type="TextWidget", type="ImageWidget".
+* Widget types type="HeadlineWidget", type="TextWidget", type="ImageWidget", type="YoutubeVideoWidget".
 * Other widget types are:
 <WIDGETSTYPES>
 * Each <widget type="HeadlineWidget"> contains a single <h1>...<h6> tag.

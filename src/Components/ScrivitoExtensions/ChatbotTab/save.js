@@ -10,8 +10,6 @@ export function canBeSaved(obj, widgetsDescription) {
 
 export async function save(obj, widgetsDescription) {
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
-  console.log("widgetsDescription", widgetsDescription);
-  console.log("scrivitoWidgets", scrivitoWidgets);
   const prevWidgets = flatWidgetsList(obj);
 
   const widgetIds = scrivitoWidgets
@@ -49,6 +47,7 @@ export async function save(obj, widgetsDescription) {
   if (!isUpdateOnly) {
     scrivitoWidgets.forEach((widget, index) => {
       if (widget.modification === 'new'){ // add only new widget
+        let container;
         if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
           const sectionWidgets = scrivitoWidgets.filter(
             ({ widget }) =>
@@ -63,7 +62,7 @@ export async function save(obj, widgetsDescription) {
               nextWidget = sectionWidgets[index+1].widget
             }
           })
-          const container = previousWidget ? previousWidget.container() : nextWidget.container();
+          container = previousWidget ? previousWidget.container() : nextWidget.container();
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
             if (nextWidget) {
@@ -85,7 +84,7 @@ export async function save(obj, widgetsDescription) {
         }else{
           let containerKeyword = "content"
           const previousWidget = scrivitoWidgets[index-1].widget;
-          let container = previousWidget;
+          container = previousWidget;
           // get the container if the previousWidget wasn't one
           if (widgetlistAttributeNames(previousWidget).length === 0) container = previousWidget.container();
           //Special Case for Column Widget
@@ -113,14 +112,6 @@ export async function save(obj, widgetsDescription) {
   await obj.finishSaving();
 }
 
-function containerAttributeName(widget) {
-  const container = widget.container();
-  console.log(container);
-  return widgetlistAttributeNames(container).find((name) =>
-    container.get(name).some((w) => w.id() === widget.id())
-  );
-}
-
 function updateAttributes(content, attributes) {
   const primaryAttributeName = getPrimaryAttributeName(content);
   Object.entries(attributes).forEach(([key, rawValue]) => {
@@ -136,7 +127,7 @@ function updateAttributes(content, attributes) {
     const [attributeType] = definition;
 
     const needsCleanup = key === "_innerHtml" && attributeType !== "html";
-    const value = needsCleanup ? cleanUp(rawValue, attributeType) : rawValue;
+    const value = needsCleanup ? cleanUp(rawValue) : rawValue;
 
     try {
       switch (attributeType) {
@@ -175,7 +166,7 @@ function updateAttributes(content, attributes) {
   });
 }
 
-function cleanUp(rawValue, attributeType) {
+function cleanUp(rawValue) {
   return rawValue.replace(/^\s*<\w+>|<\/\w+>\s*$/g, "").trim();
 }
 

@@ -60,7 +60,7 @@ export async function save(obj, widgetsDescription) {
             console.log("widgetSections", widgetSections);
             console.log("index", index);
             if (widgetSections.modification === "new" && widgetSections.widget === widget.widget) {
-              previousWidget = sectionWidgets[index-1].widget ? sectionWidgets[index-1].widget : sectionWidgets[index+1].widget
+              previousWidget = sectionWidgets[index-1] ? sectionWidgets[index-1].widget : sectionWidgets[index+1].widget
             }
           })
           console.log("previousWidget", previousWidget);

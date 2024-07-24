@@ -14,7 +14,7 @@ function htmlGenerator(widgets, deep){
   return widgets
     .map((w) => {
       const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
-      const primaryAttributeName = getPrimaryAttributeName(w);
+      const primaryAttributeName = getPrimaryAttributeName(w.nestedContent ? w.widget : w);
       const inner = primaryAttributeName
         ? getStringValue(w, primaryAttributeName)
         : "";

@@ -56,19 +56,25 @@ export async function save(obj, widgetsDescription) {
           );
           console.log("sectionWidgets", sectionWidgets);
           let previousWidget;
+          let nextWidget;
           sectionWidgets.forEach((widgetSections, index) => {
             console.log("widgetSections", widgetSections);
             console.log("index", index);
-            if (widgetSections.modification === "new" && widgetSections.widget === widget.widget) {
-              previousWidget = sectionWidgets[index-1] ? sectionWidgets[index-1].widget : sectionWidgets[index+1].widget
+            if (widgetSections.modification === "new" && widgetSections.widget === widget.widget && sectionWidgets[index-1]) {
+              previousWidget = sectionWidgets[index-1].widget
+            }else if (widgetSections.modification === "new" && widgetSections.widget === widget.widget && sectionWidgets[index+1]) {
+              nextWidget = sectionWidgets[index+1].widget
             }
           })
           console.log("previousWidget", previousWidget);
-          const container = previousWidget.container();
+          const container = previousWidget ? previousWidget.container() : nextWidget.container();
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
             console.log("widgetsContainerList", widgetsContainerList);
-            widgetsContainerList.forEach((widgetContainer, index) => {
+            if (nextWidget) {
+              widgetsContainerList.splice(0, 0, widget.widget);
+            } else {
+              widgetsContainerList.forEach((widgetContainer, index) => {
                 try {
                   console.log("widgetContainer", widgetContainer.id());
                   console.log("previousWidget", previousWidget.id());
@@ -77,12 +83,12 @@ export async function save(obj, widgetsDescription) {
                   widgetsContainerList[index] = widget.widget;
                 }
               })
-              if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
-              container.update({
-                body: [...widgetsContainerList]
-              })
-            });
-            updateAttributes(widget.widget, widget.attributes);
+            }
+            container.update({
+              body: [...widgetsContainerList]
+            })
+          });
+          updateAttributes(widget.widget, widget.attributes);
         }else{
           let containerKeyword = "content"
           const previousWidget = scrivitoWidgets[index-1].widget;

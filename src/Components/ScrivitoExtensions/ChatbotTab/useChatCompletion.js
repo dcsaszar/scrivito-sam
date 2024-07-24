@@ -132,6 +132,7 @@ async function openaiStreaming({
     },
   });
 
+  console.log("messages", messages);
   const response = await client.beta.chat.completions.stream({
     model,
     messages,

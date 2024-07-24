@@ -154,12 +154,12 @@ async function openaiStreaming({
     const message = chunk.choices[0]?.delta?.content;
     if (message) {
       fullMessage += message;
-      setCompletionMessage({ role: 'assistant', content: fullMessage });
+      setCompletionMessage({ content: fullMessage, role: 'assistant' });
     }
   }
 
   setCompletionMessage(null);
-  setMessages(messages.concat({ role: 'assistant', content: fullMessage }));
+  setMessages(messages.concat({ content: fullMessage, role: 'assistant' }));
   setLoading(false);
 }
 

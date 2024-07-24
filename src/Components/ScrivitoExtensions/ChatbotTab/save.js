@@ -204,11 +204,11 @@ function toScrivitoWidgets(obj, widgetsDescription) {
   });
 
   const deleteWidgets = prevWidgets
-    .filter((w) => !usedIds.includes(w.nestedContent ? w.widget.id() : w.id()))
+    .filter((w) => !usedIds.includes(w.id()))
     .map((w) => ({
       widget: w,
       modification: "delete",
-      widgetId: w.nestedContent ? w.widget.id() : w.id(),
+      widgetId: w.id(),
     }));
 
   return [...newWidgets, ...deleteWidgets];

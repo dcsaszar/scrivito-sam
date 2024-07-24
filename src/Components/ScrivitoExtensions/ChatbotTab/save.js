@@ -64,7 +64,7 @@ export async function save(obj, widgetsDescription) {
             }
           })
           console.log("previousWidget", previousWidget);
-          const container = scrivitoWidgets[0].widget.container();
+          const container = previousWidget.container();
           widgetlistAttributeNames(container).forEach((name) => {
             const widgetsContainerList = container.get(name.toString());
             console.log("widgetsContainerList", widgetsContainerList);

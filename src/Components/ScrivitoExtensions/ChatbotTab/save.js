@@ -59,7 +59,9 @@ export async function save(obj, widgetsDescription) {
           sectionWidgets.forEach((widgetSections, index) => {
             console.log("widgetSections", widgetSections);
             console.log("index", index);
-            if (widgetSections.modification === "new" && widgetSections.widget === widget.widget) previousWidget = sectionWidgets[index-1].widget
+            if (widgetSections.modification === "new" && widgetSections.widget === widget.widget) {
+              previousWidget = sectionWidgets[index-1].widget ? sectionWidgets[index-1].widget : sectionWidgets[index+1].widget
+            }
           })
           console.log("previousWidget", previousWidget);
           const container = scrivitoWidgets[0].widget.container();

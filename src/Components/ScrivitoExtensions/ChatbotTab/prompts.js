@@ -24,6 +24,7 @@ export const prompts = {
 
 * You have to return the full HTML code changed
 * You should not add comment on the HTML code
+* If you have to move widget you need to delete the old one and create a new widget without id
 
 The following HTML is the current input:
 

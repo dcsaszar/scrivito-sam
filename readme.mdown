@@ -24,13 +24,13 @@ Adjust the `webpack.config.js`:
 Add to `src/Objs/_metadataEditingConfig.js`:
 
 ```js
-import { assistPopertiesGroup } from "scrivito-sam";
+import { assistPropertiesGroup } from "scrivito-sam";
 
 // ...
 
 export const metadataPropertiesGroups = [
   // ...
-  assistPopertiesGroup,
+  assistPropertiesGroup,
 ];
 ```
 

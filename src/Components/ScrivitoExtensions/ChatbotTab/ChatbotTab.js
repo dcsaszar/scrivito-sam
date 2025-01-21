@@ -10,11 +10,11 @@ import { instanceId } from "./instanceId.js";
 import { languages } from "./languages.js";
 import { extractHtml } from "./extractHtml.js";
 import { parseHtml } from "./parseHtml.js";
-import { getModel } from "./model.js";
+import { getModel } from "../model.js";
 import { prompts } from "./prompts.js";
 import { getWidgetsPrompt } from "./getWidgetsPrompt.js";
 import { canBeSaved, save } from "./save.js";
-import { useChatCompletion } from "./useChatCompletion.js";
+import { useChatCompletion } from "../useChatCompletion.js";
 
 export function ChatbotTab({ obj }) {
   const uiContext = Scrivito.uiContext();

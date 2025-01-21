@@ -15,6 +15,7 @@ import { prompts } from "./prompts.js";
 import { getWidgetsPrompt } from "./getWidgetsPrompt.js";
 import { canBeSaved, save } from "./save.js";
 import { useChatCompletion } from "../useChatCompletion.js";
+import { ModelChooser } from "../ModelChooser.js";
 
 export function ChatbotTab({ obj }) {
   const uiContext = Scrivito.uiContext();
@@ -112,6 +113,7 @@ const Assist = Scrivito.connect(function ({ obj, editor, locale }) {
 
   return (
     <>
+      <ModelChooser />
       <div className="chat-wrapper">
         {messages.length < 1 ? (
           <div className="empty"></div>

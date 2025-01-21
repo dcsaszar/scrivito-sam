@@ -1,3 +1,32 @@
+.assist-model-chooser {
+  cursor: pointer;
+  float: right;
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+  &.active,
+  &:hover {
+    opacity: 1;
+  }
+
+  .icon {
+    float: right;
+    opacity: 0.5;
+  }
+
+  .assist-model-chooser-option {
+    clear: both;
+    padding: 1px 5px;
+    border-radius: 3px;
+    &.active {
+      background-color: #426698;
+    }
+    &:hover {
+      background-color: rgba(222, 222, 222, 0.2);
+    }
+  }
+}
+
 .assist-dialog-wrapper {
   -webkit-font-smoothing: antialiased;
   font-family: Manrope, Helvetica, Arial, sans-serif;

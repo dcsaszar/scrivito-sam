@@ -8,6 +8,7 @@ import { getModel } from "../model";
 import { updateObj } from "./updateObj";
 import { actions, prompts } from "./prompts";
 import { extract, getWidgetsAsArray } from "./extractContent";
+import { ModelChooser } from "../ModelChooser";
 
 export function LanguageToolsTab({ obj }) {
   const uiContext = Scrivito.uiContext();
@@ -80,6 +81,7 @@ export function LanguageToolsTab({ obj }) {
   return (
     <div className={`scrivito_${uiContext.theme}`}>
       <div className="assist-dialog-wrapper">
+        <ModelChooser />
         {actions.map((action, i) => (
           <React.Fragment key={i}>
             {action.separator ? (

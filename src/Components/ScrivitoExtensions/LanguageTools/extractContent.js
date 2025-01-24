@@ -7,6 +7,10 @@ export function extract(obj, options = {}) {
     ...options,
     extractedText: objTitle + objText,
   })
+    .flatMap(({ attributeName, contentId, objClass, value }) => [
+      `\n<!-- UUID ${objClass}-${contentId || "xxx"}-${attributeName}: -->`,
+      value,
+    ])
     .concat("\n<!-- UUID EOF -->")
     .join("\n");
 }
@@ -31,10 +35,13 @@ function extractAttributesAsArray(content, options) {
             .get(name)
             .flatMap((widget) => extractAttributesAsArray(widget, options))
         : [
-            `\n<!-- UUID ${content.objClass()}-${
-              options.includeIds ? content.id() : "xxx"
-            }-${name}: -->`,
-            type === "link" ? content.get(name).title() : content.get(name),
+            {
+              attributeName: name,
+              contentId: options.includeIds ? content.id() : undefined,
+              objClass: content.objClass(),
+              value:
+                type === "link" ? content.get(name).title() : content.get(name),
+            },
           ]
   );
 }

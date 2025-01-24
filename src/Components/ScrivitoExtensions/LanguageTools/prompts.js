@@ -31,11 +31,12 @@ export const prompts = {
 * You answer in <USERLANGUAGE>.
 * Content citations in the respective original language are allowed.
 * Respond with a plain chat message.
-* Answer with 1 to 3 short sentences.`,
+* Answer with 1 to 3 very short sentences.
+* Don't explain your answer.
+* Don't be repetitive.`,
   structuredResponse: `* Use the structured parts of the current page as input.
-* Format the result as structured parts.
-* Always use the UUIDs of the current page.
-* If only some parts need translation just output the parts that have changes.
+* Format the output in the same format as the structured current page input.
+* Use the UUIDs of the current page input.
 * Your output will be imported by a machine.
 * No human interaction is possible.
 * I clicked the button for: <TOPIC>.`,
@@ -63,41 +64,41 @@ export const actions = [
 * Is the typography good?
 * If you find actionable items, list the most important one or two.
 * Recommend manual changes only if the effort is small.
-* Available automated actions for large and many changes are: <TOPICS>
+* These automated actions for large and many changes are available: <TOPICS>
 * If an automated action you would recommend is not in this list but you think it would be used frequently by editors, output a developer note in parentheses at the end.`,
   },
   { separator: "tone" },
   {
     name: "consistentTone",
-    topic: "site-wide consistent tone of voice",
+    topic: "making the tone of voice consistent with other pages",
     instructions:
       "Adjust the tone of voice of the current page to be consistent with the tone used primarily on other pages.",
   },
   {
     name: "simpleLanguage",
-    topic: "use simple language ",
+    topic: "using simple language ",
     instructions:
       "Replace complex language on the current page by simple language, for better accessibility.",
   },
   {
     name: "formalTone",
-    topic: "more formal writing style",
+    topic: "using a more formal writing style",
     instructions: "Make the tone of voice of the current page more formal.",
   },
   {
     name: "informalTone",
-    topic: "less formal writing style",
+    topic: "using a less formal writing style",
     instructions: "Make the tone of voice of the current page less formal.",
   },
   {
     name: "friendlyTone",
-    topic: "friendly tone of voice",
+    topic: "making the tone of voice more friendly",
     instructions: "Make the current page use more friendly language.",
   },
   { separator: "translation" },
   {
     name: "translate",
-    topic: "translate to <LANGUAGE>",
+    topic: "translating to <LANGUAGE>",
     instructions: `* Make sure the whole content of the current page is in <LANGUAGE>.
 * Translate parts that do not match the required language to <LANGUAGE>.`,
   },

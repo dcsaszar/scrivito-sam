@@ -1,17 +1,32 @@
+import { sortBy } from "lodash-es";
 import { extractText } from "scrivito";
 
 export function extract(obj, options = {}) {
   const objTitle = obj.get("title");
   const objText = extractText(obj);
-  return extractAttributesAsArray(obj, {
+  const extractedText = objTitle + objText;
+
+  const unordered = extractAttributesAsArray(obj, {
     ...options,
-    extractedText: objTitle + objText,
-  })
+    extractedText,
+  });
+
+  const ordered = sortBy(unordered, (item) => {
+    const { value } = item;
+    const textValue = value.replace(/(<([^>]+)>)/gi, "");
+    const position = extractedText.indexOf(textValue);
+    return position === -1
+      ? extractedText.length + unordered.indexOf(item)
+      : position;
+  });
+
+  return ordered
     .flatMap(({ attributeName, contentId, objClass, value }) => [
-      `\n<!-- UUID ${objClass}-${contentId || "xxx"}-${attributeName}: -->`,
+      `<!-- UUID ${objClass}-${contentId || "xxx"}-${attributeName}: -->`,
       value,
+      "",
     ])
-    .concat("\n<!-- UUID EOF -->")
+    .concat("<!-- UUID EOF -->")
     .join("\n");
 }
 

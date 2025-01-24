@@ -10,8 +10,9 @@ export const prompts = {
 
 * HTML is structured as widgets.
 * Widgets are child elements of <html>.
+* <html> should have at least one <SectionWidget> with his child widgets.
 * Each widget is represented by <widget type="...">.
-* Widget types type="HeadlineWidget", type="TextWidget", type="ImageWidget".
+* Widget types type="HeadlineWidget", type="TextWidget", type="ImageWidget", type="YoutubeVideoWidget".
 * Other widget types are:
 <WIDGETSTYPES>
 * Each <widget type="HeadlineWidget"> contains a single <h1>...<h6> tag.
@@ -21,6 +22,10 @@ export const prompts = {
 * Each <widget type="TextWidget"> contains valid HTML4 tags.
 * Widgets keep their "id" attribute.
 * HTML starts with <html> and ends with </html> and is enclosed in markdown.
+
+* You have to return the full HTML code changed
+* You should not add comment on the HTML code
+* If you have to move widget you need to delete the old one and create a new widget without id
 
 The following HTML is the current input:
 

@@ -20,7 +20,7 @@ function partToWidget(part) {
       result.id = id;
     }
     const typeMatch = attributes.match(/type="([A-Z][a-zA-Z]*Widget)"/);
-    if (typeMatch && Scrivito.getClass(typeMatch[1]) !== null) {
+    if (typeMatch !== null) { //&& Scrivito.getClass(typeMatch[1]) fail for BoxWidget for example
       const [, type] = typeMatch;
       result.objClass = type;
     }

@@ -5,27 +5,45 @@ import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 export async function extractHtml(obj) {
   return Scrivito.load(() => {
     const widgets = flatWidgets(obj);
-    const html = widgets
-      .map((w) => {
-        const widgetClass = w.objClass();
-        const primaryAttributeName = getPrimaryAttributeName(w);
-        const inner = primaryAttributeName
-          ? getStringValue(w, primaryAttributeName)
-          : "";
-        const tag =
-          widgetClass.startsWith("Headline") && w.get("style")?.length === 2
-            ? w.get("style")
-            : "";
-        return `  <widget ${getAttributesHtml(w, primaryAttributeName)}>${
-          tag ? `<${tag}>` : ""
-        }${inner}${tag ? `</${tag}>` : ""}</widget>`;
-      })
-      .join("\n");
-    return `<html ${getAttributesHtml(obj)}>\n${html}\n</html>`;
+    return `<html ${getAttributesHtml(obj)}>\n${htmlGenerator(
+      widgets,
+      1
+    )}\n</html>`;
   });
 }
 
+function htmlGenerator(widgets, deep) {
+  const space = "  ".repeat(deep);
+  return widgets
+    .map((w) => {
+      const widget = w.nestedContent ? w.widget : w;
+      const widgetClass = w.nestedContent ? w.widget.objClass() : w.objClass();
+      const primaryAttributeName = getPrimaryAttributeName(
+        w.nestedContent ? w.widget : w
+      );
+      const inner = primaryAttributeName
+        ? getStringValue(widget, primaryAttributeName)
+        : "";
+      const tag =
+        widgetClass.startsWith("Headline") && w.get("style")?.length === 2
+          ? w.get("style")
+          : "";
+      if (w.nestedContent) {
+        const widgetHTML = htmlGenerator(w.nestedContent, deep + 1);
+        return `${space}<widget ${getAttributesHtml(
+          w,
+          primaryAttributeName
+        )}>\n${widgetHTML}\n${space}</widget>`;
+      }
+      return `${space}<widget ${getAttributesHtml(w, primaryAttributeName)}>${
+        tag ? `<${tag}>` : ""
+      }${inner}${tag ? `</${tag}>` : ""}</widget>`;
+    })
+    .join("\n");
+}
+
 function getAttributesHtml(content, excludedAttributeName) {
+  content = content.nestedContent ? content.widget : content;
   const attributes = { id: content.id(), type: content.objClass() };
 
   Object.entries(content.attributeDefinitions()).forEach(

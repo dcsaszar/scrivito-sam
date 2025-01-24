@@ -1,6 +1,6 @@
 import * as Scrivito from "scrivito";
 
-import { flatWidgets } from "./flatWidgets.js";
+import { flatWidgetsList } from "./flatWidgets.js";
 import { widgetlistAttributeNames } from "./widgetlistAttributeNames.js";
 import { getPrimaryAttributeName } from "./getPrimaryAttributeName.js";
 
@@ -10,66 +10,106 @@ export function canBeSaved(obj, widgetsDescription) {
 
 export async function save(obj, widgetsDescription) {
   const scrivitoWidgets = toScrivitoWidgets(obj, widgetsDescription);
-  const prevWidgets = flatWidgets(obj);
+  const prevWidgets = flatWidgetsList(obj);
 
   const widgetIds = scrivitoWidgets
     .map(({ widgetId }) => widgetId)
     .filter((w) => !!w);
   const prevWidgetIds = prevWidgets.map((widget) => widget.id());
-  const editWidgetIds = prevWidgetIds.filter((id) => widgetIds.includes(id));
-  const editWidgets = scrivitoWidgets.filter(({ widgetId }) =>
-    editWidgetIds.includes(widgetId)
-  );
+  const changeWidgetIds = prevWidgetIds.filter((id) => widgetIds.includes(id));
 
+  // edit existing widget
+  const editWidgets = scrivitoWidgets.filter(
+    ({ widgetId, modification }) =>
+      changeWidgetIds.includes(widgetId) && modification === "edit"
+  );
   editWidgets.forEach(({ widget, attributes }) => {
     const widgetToUpdate = obj.widgets().find((w) => w.id() === widget.id());
     updateAttributes(widgetToUpdate, attributes);
   });
 
+  // delete existing widget
+  const deleteWidgets = scrivitoWidgets.filter(
+    ({ widgetId, modification }) =>
+      changeWidgetIds.includes(widgetId) && modification === "delete"
+  );
+  deleteWidgets.forEach(({ widget }) => {
+    const widgetToDelete = obj.widgets().find((w) => w.id() === widget.id());
+    if (widgetToDelete) widgetToDelete.delete()
+  });
+
+  // add new widget
   const hasNewWidgets = scrivitoWidgets.some(
     ({ modification }) => modification === "new"
   );
   const isUpdateOnly =
     !hasNewWidgets && widgetIds.join() === prevWidgetIds.join();
-
   if (!isUpdateOnly) {
-    const firstPrevWidget = prevWidgets[0];
-    const container = firstPrevWidget?.container() || obj;
-    const preferredAttributeName = firstPrevWidget
-      ? containerAttributeName(firstPrevWidget)
-      : "body";
-    const attributeName =
-      widgetlistAttributeNames(container).find(
-        (name) => name === preferredAttributeName
-      ) || widgetlistAttributeNames(container)[0];
-    const newWidgets = scrivitoWidgets.map(({ widget }) => widget);
-
-    prevWidgets.forEach((prevWidget) => {
-      const clearContainer = prevWidget.container();
-      widgetlistAttributeNames(clearContainer).forEach((name) => {
-        clearContainer.update({
-          [name]: clearContainer
-            .get(name)
-            .filter((widget) =>
-              widget.widgets().some((w) => w.id() === container.id())
-            ),
-        });
-      });
+    scrivitoWidgets.forEach((widget, index) => {
+      if (widget.modification === 'new'){ // add only new widget
+        let container;
+        if (widget.widget.objClass() === "SectionWidget"){ // special treatment for SectionWidget
+          const sectionWidgets = scrivitoWidgets.filter(
+            ({ widget }) =>
+              widget.objClass() === "SectionWidget"
+          );
+          let previousWidget;
+          let nextWidget;
+          sectionWidgets.forEach((widgetSections, index) => {
+            if (widgetSections.modification === "new" && widgetSections.widget === widget.widget && sectionWidgets[index-1]) {
+              previousWidget = sectionWidgets[index-1].widget
+            }else if (widgetSections.modification === "new" && widgetSections.widget === widget.widget && sectionWidgets[index+1]) {
+              nextWidget = sectionWidgets[index+1].widget
+            }
+          })
+          container = previousWidget ? previousWidget.container() : nextWidget.container();
+          widgetlistAttributeNames(container).forEach((name) => {
+            const widgetsContainerList = container.get(name.toString());
+            if (nextWidget) {
+              widgetsContainerList.splice(0, 0, widget.widget);
+            } else {
+              widgetsContainerList.forEach((widgetContainer, index) => {
+                try {
+                  if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+                }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+                  widgetsContainerList[index] = widget.widget;
+                }
+              })
+            }
+            container.update({
+              body: [...widgetsContainerList]
+            })
+          });
+          updateAttributes(widget.widget, widget.attributes);
+        }else{
+          let containerKeyword = "content"
+          const previousWidget = scrivitoWidgets[index-1].widget;
+          container = previousWidget;
+          // get the container if the previousWidget wasn't one
+          if (widgetlistAttributeNames(previousWidget).length === 0) container = previousWidget.container();
+          //Special Case for Column Widget
+          if (widget.widget.objClass() === "ColumnWidget" && container.objClass() === "ColumnWidget") container = container.container()
+          widgetlistAttributeNames(container).forEach((name) => {
+            const widgetsContainerList = container.get(name.toString());
+            widgetsContainerList.forEach((widgetContainer, index) => {
+              try {
+                if (widgetContainer.id() === previousWidget.id()) widgetsContainerList.splice(index + 1, 0, widget.widget);
+              }catch (e){ //when widget is in the middle we iterate on it but id() throw an error
+                widgetsContainerList[index] = widget.widget;
+              }
+            })
+            if (!widgetsContainerList.includes(widget.widget)) widgetsContainerList.splice(0, 0, widget.widget);
+            if (container.objClass() === "ColumnContainerWidget") containerKeyword = "columns"
+            container.update({
+              [containerKeyword]: [...widgetsContainerList]
+            })
+          });
+          updateAttributes(widget.widget, widget.attributes)
+        }
+      }
     });
-    container.update({ [attributeName]: newWidgets });
   }
-
-  scrivitoWidgets.forEach(({ widget, attributes }) =>
-    updateAttributes(widget, attributes)
-  );
   await obj.finishSaving();
-}
-
-function containerAttributeName(widget) {
-  const container = widget.container();
-  return widgetlistAttributeNames(container).find((name) =>
-    container.get(name).some((w) => w.id() === widget.id())
-  );
 }
 
 function updateAttributes(content, attributes) {
@@ -87,7 +127,7 @@ function updateAttributes(content, attributes) {
     const [attributeType] = definition;
 
     const needsCleanup = key === "_innerHtml" && attributeType !== "html";
-    const value = needsCleanup ? cleanUp(rawValue, attributeType) : rawValue;
+    const value = needsCleanup ? cleanUp(rawValue) : rawValue;
 
     try {
       switch (attributeType) {
@@ -126,40 +166,42 @@ function updateAttributes(content, attributes) {
   });
 }
 
-function cleanUp(rawValue, attributeType) {
+function cleanUp(rawValue) {
   return rawValue.replace(/^\s*<\w+>|<\/\w+>\s*$/g, "").trim();
 }
 
 function toScrivitoWidgets(obj, widgetsDescription) {
   if (!widgetsDescription) return undefined;
-  const prevWidgets = flatWidgets(obj);
+  const prevWidgets = flatWidgetsList(obj);
   const usedIds = [];
-  const newWidgets = widgetsDescription.map(
-    ({ id, objClass, ...attributes }) => {
-      const existingWidget = prevWidgets.find((w) => w.id() === id);
-      if (
-        existingWidget &&
-        existingWidget.objClass() === objClass &&
-        !usedIds.includes(id)
-      ) {
-        usedIds.push(id);
-        return {
-          widget: existingWidget,
-          attributes,
-          modification: "edit",
-          widgetId: id,
-        };
-      }
-      const WidgetClass = Scrivito.getClass(objClass);
-      if (!WidgetClass) return null;
+  const newWidgets = widgetsDescription.map(({ id, objClass, ...attributes }) => {
+    let existingWidget = prevWidgets.find((w) => w.id() === id);
+    if (existingWidget && existingWidget.objClass() === objClass && !usedIds.includes(id)) {
+      usedIds.push(id);
       return {
-        // @ts-ignore
-        widget: new WidgetClass({}),
+        widget: existingWidget,
         attributes,
-        modification: "new",
+        modification: "edit",
+        widgetId: id,
       };
     }
-  );
+    const WidgetClass = Scrivito.getClass(objClass);
+    if (!WidgetClass) return null;
+    return {
+      widget: new WidgetClass({}),
+      attributes,
+      modification: "new",
+    };
+  });
 
-  return newWidgets.filter((w) => w !== null);
+  const deleteWidgets = prevWidgets
+    .filter((w) => !usedIds.includes(w.id()))
+    .map((w) => ({
+      widget: w,
+      modification: "delete",
+      widgetId: w.id(),
+    }));
+
+  return [...newWidgets, ...deleteWidgets];
 }
+

@@ -27,6 +27,15 @@ export function LanguageToolsTab({ obj }) {
     instanceId: Scrivito.getInstanceId(),
   });
 
+  const message = messages
+    .filter(({ role }) => role === "assistant")
+    .map(({ content }) => content)
+    .join("\n");
+
+  React.useEffect(() => {
+    if (!loading && isSubmitted) console.log(message);
+  }, [loading, isSubmitted, message]);
+
   if (!uiContext || !editor) return null;
 
   const objVersions = obj
@@ -70,13 +79,6 @@ export function LanguageToolsTab({ obj }) {
     USERLANGUAGE: languageName("en", locale),
     LOCALIZEDPAGELANGUAGE: languageName(locale, objLanguage),
   };
-
-  const message = messages
-    .filter(({ role }) => role === "assistant")
-    .map(({ content }) => content)
-    .join("\n");
-
-  if (!loading && isSubmitted) console.log(message);
 
   return (
     <div className={`scrivito_${uiContext.theme}`}>

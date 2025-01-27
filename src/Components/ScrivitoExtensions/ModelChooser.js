@@ -23,7 +23,7 @@ function Options() {
 
   return availableModels.map((name) => (
     <div
-      key="model"
+      key={name}
       className={`assist-model-chooser-option ${
         name === option ? "active" : ""
       }`}

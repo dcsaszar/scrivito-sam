@@ -10,5 +10,13 @@
     "react": "*",
     "scrivito": "*"
   },
-  "type": "module"
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll --transform '{\"\":[\"ts-jest\",{\"diagnostics\":{\"warnOnly\":true}}]}'"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "ts-jest": "^29.2.5"
+  }
 }

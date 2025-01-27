@@ -218,19 +218,19 @@ const Content = React.memo(({ content, obj, language, loading }) => {
   }, [content, loading]);
 
   const parts = parseMessage(content);
-  return parts.map((part, i) => {
-    const isHtml = part.includes("<widget ");
-    const widgetsDescription = isHtml ? parseHtml(part) : undefined;
+  return parts.map(({ type, value }, i) => {
+    const isHtml = type === "html";
+    const widgetsDescription = isHtml ? parseHtml(value) : undefined;
     return (
       <section className={isHtml ? "html" : "text"} key={i}>
         {isHtml ? (
           <div
             dangerouslySetInnerHTML={{
-              __html: part?.replace(/<[^>]*$/, ""),
+              __html: value?.replace(/<[^>]*$/, ""),
             }}
           />
         ) : (
-          part.replace(/<([\/a-z]*)[^>]+>/g, (all, tag) =>
+          value.replace(/<([\/a-z]*)[^>]+>/g, (all, tag) =>
             tag[0] === "/" ? " " : all.replace(/type=|widget |<h.>/g, "")
           )
         )}

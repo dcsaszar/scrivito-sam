@@ -12,7 +12,13 @@ export function parseMessage(message) {
 
   const parts = preprocessedContent.split(SPLIT);
 
-  return parts;
+  return parts
+    .map((value) => value.trim())
+    .filter((value) => !!value)
+    .map((value) => {
+      const isHtml = value.includes("<widget ");
+      return { type: isHtml ? "html" : "text", value };
+    });
 }
 
 const SPLIT =

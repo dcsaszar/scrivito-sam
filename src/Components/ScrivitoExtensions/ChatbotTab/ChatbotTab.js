@@ -16,6 +16,7 @@ import { getWidgetsPrompt } from "./getWidgetsPrompt.js";
 import { canBeSaved, save } from "./save.js";
 import { useChatCompletion } from "../useChatCompletion.js";
 import { ModelChooser } from "../ModelChooser.js";
+import { parseMessage } from "./parseMessage.js";
 
 export function ChatbotTab({ obj }) {
   const uiContext = Scrivito.uiContext();
@@ -210,28 +211,13 @@ const scrollToEnd = throttle(() => {
   document.getElementById("bottom")?.scrollIntoView({ behavior: "smooth" });
 }, 250);
 
-const SPLIT =
-  /<\/html>\s*```|```html\n<html[^<>]*>?|<\/html>|<html[^<>]*>?|```[a-z]*/;
-
 // @ts-ignore
 const Content = React.memo(({ content, obj, language, loading }) => {
   React.useEffect(() => {
     if (!loading && content) console.log(content);
   }, [content, loading]);
 
-  let preprocessedContent = content;
-  if (content.includes("<widget") && !content.includes("<html")) {
-    preprocessedContent = preprocessedContent.replace(
-      "<widget",
-      "<html><widget"
-    );
-    const tmpForReplace = [...preprocessedContent.split("</widget>")];
-    // @ts-ignore
-    tmpForReplace[tmpForReplace.length - 1] = `</html>${tmpForReplace.at(-1)}`;
-    preprocessedContent = tmpForReplace.join("</widget>");
-  }
-
-  const parts = preprocessedContent.split(SPLIT);
+  const parts = parseMessage(content);
   return parts.map((part, i) => {
     const isHtml = part.includes("<widget ");
     const widgetsDescription = isHtml ? parseHtml(part) : undefined;

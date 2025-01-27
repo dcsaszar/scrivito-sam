@@ -65,6 +65,7 @@ const Assist = Scrivito.connect(function ({ obj, editor, locale }) {
   const onSend = React.useCallback(async () => {
     const widgetsPrompt = await getWidgetsPrompt(obj);
     const html = await extractHtml(obj);
+    console.log(html);
 
     if (!prompt) return;
 
@@ -214,6 +215,10 @@ const SPLIT =
 
 // @ts-ignore
 const Content = React.memo(({ content, obj, language, loading }) => {
+  React.useEffect(() => {
+    if (!loading && content) console.log(content);
+  }, [content, loading]);
+
   let preprocessedContent = content;
   if (content.includes("<widget") && !content.includes("<html")) {
     preprocessedContent = preprocessedContent.replace(

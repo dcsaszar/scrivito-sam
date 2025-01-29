@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { useMemo, useState } from "react";
 
-export function useChatCompletion({ apiKey, instanceId, model, user }) {
+export function useChatCompletion({ getApiKey, instanceId, model, user }) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [completionMessage, setCompletionMessage] = useState(null);
@@ -21,7 +21,7 @@ export function useChatCompletion({ apiKey, instanceId, model, user }) {
       setMessages((m) => {
         const messagesWithPrompt = [...m, ...prompt];
         startStreaming({
-          apiKey,
+          getApiKey,
           instanceId,
           model,
           messages: messagesWithPrompt,
@@ -53,7 +53,7 @@ if (typeof import.meta.env !== "undefined") {
 }
 
 async function startStreaming({
-  apiKey,
+  getApiKey,
   instanceId,
   messages,
   model,
@@ -63,7 +63,7 @@ async function startStreaming({
   user,
 }) {
   const client = new OpenAI({
-    apiKey: OPENAI_API_KEY || apiKey,
+    apiKey: OPENAI_API_KEY || (await getApiKey?.()),
     baseURL: OPENAI_API_KEY
       ? "https://api.openai.com/v1"
       : "https://e7iuggnyr4t2grfrffawjd2q5a0mdcgh.lambda-url.eu-central-1.on.aws/v1",

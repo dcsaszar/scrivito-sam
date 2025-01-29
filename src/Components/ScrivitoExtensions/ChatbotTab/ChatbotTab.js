@@ -53,7 +53,8 @@ const Assist = Scrivito.connect(function ({ obj, editor, locale }) {
     setMessages,
   } = useChatCompletion({
     model: getModel(),
-    apiKey: token,
+    getApiKey: async () =>
+      Scrivito.load(() => Scrivito.currentEditor()?.authToken()),
     user: editor.id(),
     instanceId: instanceId(),
   });

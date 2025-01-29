@@ -17,12 +17,10 @@ export function LanguageToolsTab({ obj }) {
   const [chatOnly, setChatOnly] = React.useState(true);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
 
-  // @ts-ignore
-  const token = Scrivito.currentEditor()?.authToken();
-
   const { messages, loading, submitPrompt, resetMessages } = useChatCompletion({
     model: getModel(),
-    apiKey: token,
+    getApiKey: async () =>
+      Scrivito.load(() => Scrivito.currentEditor()?.authToken()),
     user: editor?.id(),
     instanceId: Scrivito.getInstanceId(),
   });

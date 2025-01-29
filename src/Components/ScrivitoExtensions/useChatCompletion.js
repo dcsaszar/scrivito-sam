@@ -62,43 +62,53 @@ async function startStreaming({
   setMessages,
   user,
 }) {
-  const client = new OpenAI({
-    apiKey: OPENAI_API_KEY || (await getApiKey?.()),
-    baseURL: OPENAI_API_KEY
-      ? "https://api.openai.com/v1"
-      : "https://e7iuggnyr4t2grfrffawjd2q5a0mdcgh.lambda-url.eu-central-1.on.aws/v1",
+  let content = "";
+  let role = null;
+  let message = null;
+  let finishReason;
 
-    defaultQuery: { tenant_id: instanceId },
-    dangerouslyAllowBrowser: true,
-  });
+  do {
+    const client = new OpenAI({
+      apiKey: OPENAI_API_KEY || (await getApiKey?.()),
+      baseURL: OPENAI_API_KEY
+        ? "https://api.openai.com/v1"
+        : "https://e7iuggnyr4t2grfrffawjd2q5a0mdcgh.lambda-url.eu-central-1.on.aws/v1",
 
-  let stream;
-
-  try {
-    stream = await client.chat.completions.create({
-      model,
-      messages,
-      stream: true,
-      user,
+      defaultQuery: { tenant_id: instanceId },
+      dangerouslyAllowBrowser: true,
     });
-  } catch (error) {
-    console.error(error);
-    setLoading(false);
-    return;
-  }
 
-  const message = {};
+    finishReason = null;
+    let stream;
 
-  for await (const chunk of stream) {
-    const { content, role } = chunk.choices[0].delta;
-    if (role) message.role = role;
-    if (content) {
-      message.content = [message.content, content].join("");
-      setCompletionMessage({ ...message });
+    try {
+      stream = await client.chat.completions.create({
+        model,
+        messages: message ? messages.concat(message) : messages,
+        stream: true,
+        user,
+      });
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return;
     }
-  }
+
+    for await (const chunk of stream) {
+      const { delta, finish_reason } = chunk.choices[0];
+      finishReason = finish_reason;
+      role ||= delta.role;
+      if (delta.content) {
+        content += delta.content;
+        setCompletionMessage({ role, content });
+      }
+      message = { role, content };
+    }
+  } while (finishReason === "length" && content.length < MAX_OUTPUT_TOKENS * 4);
 
   setCompletionMessage(null);
-  setMessages(messages.concat({ ...message }));
+  setMessages(messages.concat(message));
   setLoading(false);
 }
+
+const MAX_OUTPUT_TOKENS = 32_000;

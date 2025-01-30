@@ -45,7 +45,7 @@ export const prompts = {
 * Format the output in the same format as the structured current page input.
 * Use the UUIDs of the current page input.
 * Your output will be imported by a machine.
-* No human interaction is possible.
+* No manual intervention is possible.
 * I clicked the button for: <TOPIC>.`,
   objDescription: `# The plain text extracted from <PAGE>:
 \`\`\`text
@@ -79,7 +79,7 @@ export const actions = [
   { separator: "tone" },
   {
     name: "toneOfVoice",
-    topic: "follow our tone-of-voice guidelines",
+    topic: "follow our guidelines",
     instructions:
       'Update the current page according to the rules in the section "Our guidelines".',
   },

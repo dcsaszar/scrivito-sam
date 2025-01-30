@@ -3,7 +3,8 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "openai": "^4.55.4",
-    "react-textarea-autosize": "^8.5.2"
+    "react-textarea-autosize": "^8.5.2",
+    "turndown": "^7.2.0"
   },
   "main": "src/index.js",
   "peerDependencies": {

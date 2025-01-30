@@ -2,6 +2,8 @@ import "../../../style.scss";
 
 import * as React from "react";
 import * as Scrivito from "scrivito";
+import TurndownService from "turndown";
+
 import { localize, replace } from "./languages";
 import { useChatCompletion } from "../useChatCompletion";
 import { getModel } from "../model";
@@ -9,6 +11,9 @@ import { updateObj } from "./updateObj";
 import { actions, prompts } from "./prompts";
 import { extract, getWidgetsAsArray } from "./extractContent";
 import { ModelChooser } from "../ModelChooser";
+import { ConfigDialog } from "./ConfigDialog";
+
+const turndownService = new TurndownService();
 
 export function LanguageToolsTab({ obj }) {
   const uiContext = Scrivito.uiContext();
@@ -16,6 +21,7 @@ export function LanguageToolsTab({ obj }) {
   const locale = Scrivito.editorLanguage() || "en";
   const [chatOnly, setChatOnly] = React.useState(true);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [showConfig, setShowConfig] = React.useState(false);
 
   const { messages, loading, submitPrompt, resetMessages } = useChatCompletion({
     model: getModel(),
@@ -59,6 +65,21 @@ export function LanguageToolsTab({ obj }) {
     )
     .join("\n\n");
 
+  const root = Scrivito.Obj.root();
+  const languageToolsPrompt = root.get("languageToolsPrompt");
+  const fallbackLanguageToolsPrompt =
+    root
+      .versionsOnAllSites()
+      .map((site) => site.get("languageToolsPrompt"))
+      .find((value) => value) || "";
+  const isLanguageToolsPromptConfigurable =
+    typeof languageToolsPrompt === "string";
+  const sitePrompt = isLanguageToolsPromptConfigurable
+    ? turndownService.turndown(
+        languageToolsPrompt || fallbackLanguageToolsPrompt
+      )
+    : "";
+
   const objTitle = obj.get("title");
   const objText = Scrivito.extractText(obj);
   const objStructure = extract(obj);
@@ -68,20 +89,39 @@ export function LanguageToolsTab({ obj }) {
 
   const localizeArgs = {
     LANGUAGE: languageName("en", objLanguage),
-    TOPICS: actions
-      .filter(({ topic }) => topic)
-      .map(({ topic }) =>
-        replace(topic, { LANGUAGE: languageName("en", objLanguage) })
-      )
-      .join(", "),
+    SITEPROMPT: sitePrompt,
     USERLANGUAGE: languageName("en", locale),
     LOCALIZEDPAGELANGUAGE: languageName(locale, objLanguage),
   };
 
+  localizeArgs["TOPICS"] = [""]
+    .concat(
+      actions
+        .filter(({ topic }) => topic)
+        .map(
+          ({ name, topic }) =>
+            `${localize(locale, name, localizeArgs)} (${replace(
+              topic,
+              localizeArgs
+            )})`
+        )
+    )
+    .join("\n  * ");
+
   return (
     <div className={`scrivito_${uiContext.theme}`}>
       <div className="assist-dialog-wrapper">
-        <ModelChooser />
+        <ModelChooser
+          extraOptionLabel={
+            !Scrivito.isComparisonActive() &&
+            isLanguageToolsPromptConfigurable &&
+            localize(locale, "configurePrompt")
+          }
+          onExtraOption={() => {
+            setShowConfig(true);
+          }}
+        />
+        {showConfig && <ConfigDialog onClose={() => setShowConfig(false)} />}
         {actions.map((action, i) => (
           <React.Fragment key={i}>
             {action.separator ? (
@@ -116,7 +156,7 @@ export function LanguageToolsTab({ obj }) {
       LANGUAGE: languageName("en", objLanguage),
       TEXT: objText,
       TITLE: objTitle,
-      TOPIC: replace(action.topic, localizeArgs),
+      TOPIC: replace(action.topic || action.name, localizeArgs),
     };
     const promptArgs = {
       ...args,

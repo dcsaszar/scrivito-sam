@@ -3,6 +3,7 @@
   float: right;
   opacity: 0;
   position: relative;
+  user-select: none;
   z-index: 1;
   &.active,
   &:hover {

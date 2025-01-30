@@ -1,15 +1,30 @@
 import * as React from "react";
 import { availableModels, getModel, setModel } from "./model";
 
-export function ModelChooser() {
+export function ModelChooser({ extraOptionLabel, onExtraOption }) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [showModels, setShowModels] = React.useState(false);
   return (
     <div
       className={`assist-model-chooser ${isOpen ? "active" : ""}`}
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={(e) => {
+        setShowModels(e.shiftKey);
+        setIsOpen(!isOpen);
+      }}
     >
       <i className="icon fa-gear"></i>
-      {isOpen && <Options />}
+      {isOpen && extraOptionLabel && (
+        <div
+          className="assist-model-chooser-option"
+          onClick={() => {
+            setIsOpen(false);
+            onExtraOption();
+          }}
+        >
+          {extraOptionLabel}
+        </div>
+      )}
+      {isOpen && showModels && <Options />}
     </div>
   );
 }

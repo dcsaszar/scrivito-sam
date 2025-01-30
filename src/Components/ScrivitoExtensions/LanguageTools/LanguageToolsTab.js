@@ -75,9 +75,9 @@ export function LanguageToolsTab({ obj }) {
   const isLanguageToolsPromptConfigurable =
     typeof languageToolsPrompt === "string";
   const sitePrompt = isLanguageToolsPromptConfigurable
-    ? turndownService.turndown(
-        languageToolsPrompt || fallbackLanguageToolsPrompt
-      )
+    ? turndownService
+        .turndown(languageToolsPrompt || fallbackLanguageToolsPrompt)
+        .replace(/\\/g, "")
     : "";
 
   const objTitle = obj.get("title");

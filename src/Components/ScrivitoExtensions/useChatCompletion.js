@@ -89,7 +89,10 @@ async function startStreaming({
         user,
       });
     } catch (error) {
-      console.error(error);
+      setCompletionMessage(null);
+      setMessages(
+        messages.concat({ role: "assistant", content: error.toString() })
+      );
       setLoading(false);
       return;
     }

@@ -19,19 +19,35 @@ Adjust the `webpack.config.js`:
   // ...
 ```
 
-### Add the extension
+### Add the extensions
 
 Add to `src/Objs/_metadataEditingConfig.js`:
 
 ```js
-import { assistPropertiesGroup } from "scrivito-sam";
+import {
+  assistPropertiesGroup,
+  languageToolsPropertiesGroup,
+} from "scrivito-sam";
 
 // ...
 
 export const metadataPropertiesGroups = [
   // ...
   assistPropertiesGroup,
+  languageToolsPropertiesGroup,
 ];
+```
+
+#### Optionally
+
+Add to `src/Objs/Homepage/HomepageObjClass.js`:
+
+```js
+// ...
+  attributes: {
+// ...
+    languageToolsPrompt: 'html',
+// ...
 ```
 
 ## Update

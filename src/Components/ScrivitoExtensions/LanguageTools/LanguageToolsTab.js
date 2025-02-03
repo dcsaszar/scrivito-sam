@@ -4,14 +4,14 @@ import * as React from "react";
 import * as Scrivito from "scrivito";
 import TurndownService from "turndown";
 
-import { localize, replace } from "./languages";
-import { useChatCompletion } from "../useChatCompletion";
-import { getModel } from "../model";
-import { updateObj } from "./updateObj";
-import { actions, prompts } from "./prompts";
-import { extract, getWidgetsAsArray } from "./extractContent";
-import { ModelChooser } from "../ModelChooser";
-import { ConfigDialog } from "./ConfigDialog";
+import { localize, replace } from "./languages.js";
+import { useChatCompletion } from "../useChatCompletion.js";
+import { getModel } from "../model.js";
+import { updateObj } from "./updateObj.js";
+import { actions, prompts } from "./prompts.js";
+import { extract, getWidgetsAsArray } from "./extractContent.js";
+import { ModelChooser } from "../ModelChooser.js";
+import { ConfigDialog } from "./ConfigDialog.js";
 
 const turndownService = new TurndownService();
 

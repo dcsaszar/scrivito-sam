@@ -1,5 +1,5 @@
 import * as React from "react";
-import { availableModels, getModel, setModel } from "./model";
+import { availableModels, getModel, setModel } from "./model.js";
 
 export function ModelChooser({ extraOptionLabel, onExtraOption }) {
   const [isOpen, setIsOpen] = React.useState(false);

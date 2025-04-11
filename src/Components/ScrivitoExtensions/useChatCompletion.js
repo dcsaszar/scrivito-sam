@@ -72,9 +72,9 @@ async function startStreaming({
       apiKey: OPENAI_API_KEY || (await getApiKey?.()),
       baseURL: OPENAI_API_KEY
         ? "https://api.openai.com/v1"
-        : "https://e7iuggnyr4t2grfrffawjd2q5a0mdcgh.lambda-url.eu-central-1.on.aws/v1",
+        : "https://6dyoi7w4yzq2bta2fh5hubtd4a0lnozo.lambda-url.eu-central-1.on.aws/v1",
 
-      defaultQuery: { tenant_id: instanceId },
+      defaultQuery: { instance_id: instanceId },
       dangerouslyAllowBrowser: true,
     });
 
